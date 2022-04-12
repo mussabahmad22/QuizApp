@@ -220,6 +220,7 @@ class ApiController extends Controller
     //=============== Get All exercises against category by id Api =================
     public function exercise(Request $request, $id)
     {
+       // dd($request);
         $cat = Categoury::find($id);
         $exe = Exercise::where('categoury_id', $id)->count();
         $query = Exercise::select('id','exercise_name', 'time_duration')->where('categoury_id', $id)->get();
@@ -577,7 +578,7 @@ class ApiController extends Controller
                     }
 
                     $res['status'] = True;
-                    $res['message'] = "Time Up!";
+                    $res['message'] = "You Have Solved Exercise Completely!";
                     $res['data']['Total_Marks'] = $total_marks;
                     $res['data']['Total_Questions'] = $total_questions;
                     $res['data']['Un_Attempt_Questions'] = $unans;

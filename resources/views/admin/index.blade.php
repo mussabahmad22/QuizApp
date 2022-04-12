@@ -39,11 +39,11 @@
     $(document).ready(function(){
 
         $('#users').on('click', function(){
-            window.location.href = '/users';
+            window.location.href = '{{route("users")}}';
         });
 
         $('#category').on('click', function(){
-            window.location.href = '/categoury';
+            window.location.href = '{{route("addCategoury")}}';
         });
 
     });
