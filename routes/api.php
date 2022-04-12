@@ -48,12 +48,12 @@ Route::post('/update_category/{id}', [ApiController::class, 'update_category']);
 Route::get('/delete_category/{id}' , [ApiController::class, 'delete_category']);
 
 //=============== Get All exercises against category by id Api =================
-Route::get('/exercise/{id}' , [ApiController::class, 'exercise']);
+Route::get('/exercise' , [ApiController::class, 'exercise']);
 //=============== Get All Questions against exercise by id Api =================
-Route::get('/questions/{id}' , [ApiController::class, 'questions']);
+Route::get('/questions' , [ApiController::class, 'questions']);
 //=============== Get Quiz  Api =============================
-Route::post('/quiz_start/{user_id}/{exe_id}' , [ApiController::class, 'quiz_start']);
-Route::post('/quiz/{user_id}/{exe_id}/{ques_id}/{ans}' , [ApiController::class, 'quiz_submit']);
+Route::post('/quiz_start' , [ApiController::class, 'quiz_start']);
+Route::post('/quiz' , [ApiController::class, 'quiz_submit']);
 
 //=============================== User Login ==========================
 Route::post('/login',  [ApiController::class, 'login']);
@@ -64,16 +64,16 @@ Route::get('/logout',  [ApiController::class, 'logout']);
 Route::get('/blog' , [ApiController::class, 'blog'])->name('blog');
 
 //===============================Blog posts Api Routes=============================================
-Route::get('/blog_posts/{id}' , [ApiController::class, 'blog_posts'])->name('blog_posts');
+Route::get('/blog_posts' , [ApiController::class, 'blog_posts'])->name('blog_posts');
 //===============================Show Blog posts Api Routes==========================================
-Route::get('/show_blog_post/{id}' , [ApiController::class, 'show_blog_post'])->name('show_blog_post');
+Route::get('/show_blog_post' , [ApiController::class, 'show_blog_post'])->name('show_blog_post');
 
 //================== Get All Bookmarks Api ================================
 Route::get('/bookmark', [ApiController::class, 'bookmark']);
 //================== Add Bookmark Api =====================================
 Route::post('/add_bookmark', [ApiController::class, 'add_bookmark']);
 //================== Delete Bookmark Api ==================================
-Route::get('/delete_bookmark/{id}' , [ApiController::class, 'delete_bookmark']);
+Route::get('/delete_bookmark' , [ApiController::class, 'delete_bookmark']);
 
 
 
