@@ -220,7 +220,6 @@ class ApiController extends Controller
     //=============== Get All exercises against category by id Api =================
     public function exercise(Request $request)
     {
-       // dd($request);
         $cat = Categoury::find($request->cat_id);
         $exe = Exercise::where('categoury_id', $request->cat_id)->count();
         $query = Exercise::select('id','exercise_name', 'time_duration')->where('categoury_id', $request->cat_id)->get();
@@ -233,7 +232,10 @@ class ApiController extends Controller
             return response()->json($res);
 
         } else {
+            
             $exercise_list = array();
+            $total_questions = array();
+
             foreach ($query as $que) {
 
                 $quiz = Quiz::where('user_id', $request->user_id)->where('exercise_id',$que->id)->count();
@@ -249,6 +251,21 @@ class ApiController extends Controller
                 }
 
                 array_push($exercise_list, $que);
+                
+                $ques = Question::where('exercise_id', $que->id)->count();
+
+                if ($ques) {
+
+                    $que->total_questions = $ques;
+
+                } else {
+
+                    $que->total_questions = 'No Record Found!!';
+                
+                }
+
+                array_push($total_questions, $que);
+
             }
 
             $res['status'] = true;
@@ -265,6 +282,14 @@ class ApiController extends Controller
     public function questions(Request $request)
     {
         $exe = Exercise::find($request->exe_id);
+          if(is_null($exe)){
+
+            $res['status'] = false;
+            $res['message'] = "Record Not Found!";
+            $res['data'] = [];
+            return response()->json($res);
+        }
+
         $ques = Question::where('exercise_id', $request->exe_id)->count();
         $query = DB::select('select * from questions where exercise_id =' .$request->exe_id);
 
@@ -274,6 +299,7 @@ class ApiController extends Controller
             $res['message'] = "Record Not Found!";
             $res['data'] = [];
             return response()->json($res);
+            
         } else {
 
             $res['status'] = true;
