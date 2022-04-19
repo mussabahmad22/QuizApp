@@ -75,8 +75,8 @@
                                         <td><a href="{{url('edit_user/'.$user->id)}}"><button type="button"
                                                     class="btn btn-dark">Edit</button></a>
                                             <!-- Button trigger modal -->
-                                            <button type="button" id="deletebtn" class="btn btn-danger"
-                                                data-toggle="modal" data-target="#exampleModal">
+                                            <button type="button" id="deletebtn" value="{{$user->id}}"
+                                                class="btn btn-danger deletebtn">
                                                 Delete
                                             </button>
                                         </td>
@@ -87,28 +87,38 @@
                         </div>
                     </div>
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">User Data
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete User
                                     </h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    Are u want to delete user?
+                                    <form type="submit" action="{{url('delete_user')}}" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <div class="intro-y col-span-12 lg:col-span-8 p-5">
+                                            <div class="grid grid-cols-12 gap-4 row-gap-5">
+                                                <input type="hidden" name="delete_user_id"
+                                                    id="deleting_id"></input>
+                                                <p>Are you sure! want to Delete User?</p>
+                                            </div>
+                                        </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <a href="{{url('delete_user/'.$user->id)}}"><button type="button"
-                                            class="btn btn-danger">Delete</button></a>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -117,6 +127,12 @@
 <script>
     $(document).ready(function () {
         $('#usertbl').DataTable();
+    });
+
+    $(document).on('click', '.deletebtn', function () {
+        var user_id = $(this).val();
+        $('#deleteModal').modal('show');
+        $('#deleting_id').val(user_id);
     });
 
     // $('#deletebtn').click(function () {

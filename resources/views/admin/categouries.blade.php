@@ -13,14 +13,15 @@
             <br>
             <div class="row">
                 @foreach($categouries as $cat)
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-3 col-6 ">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3 class="text-white">{{$cat->name}}</h3>
+                            <h3 class="text-white"><i class="nav-icon fas fa-chart-pie"></i></h3>
+                            <h6>{{$cat->name}}</h6>
                         </div>
                         <div class="icon">
-                            <i class="ion ion-bag"></i>
+                            <i class="nav-icon fas fa-chart-pie"></i>
                         </div>
                         <a href="{{url('/exercise/'.$cat->id)}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>

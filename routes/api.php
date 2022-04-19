@@ -54,6 +54,7 @@ Route::get('/questions' , [ApiController::class, 'questions']);
 //=============== Get Quiz  Api =============================
 Route::post('/quiz_start' , [ApiController::class, 'quiz_start']);
 Route::post('/quiz' , [ApiController::class, 'quiz_submit']);
+Route::post('/result' , [ApiController::class, 'result']);
 
 //=============================== User Login ==========================
 Route::post('/login',  [ApiController::class, 'login']);

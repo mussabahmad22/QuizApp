@@ -49,7 +49,7 @@ Route::middleware('auth','admin')->group(function () {
     Route::post('/add_users' , [AdminController::class, 'add_users'])->name('add_users');
     Route::get('/edit_user/{id}' , [AdminController::class, 'edit_user'])->name('edit_user');
     Route::post('/update_user/{id}' , [AdminController::class, 'update_user'])->name('update_user');
-    Route::get('/delete_user/{id}' , [AdminController::class, 'delete_user'])->name('delete_user');
+    Route::delete('/delete_user' , [AdminController::class, 'delete_user'])->name('delete_user');
     Route::get('/admin_logout' , [AdminController::class, 'logout'])->name('admin_logout');
 
     

@@ -52,12 +52,12 @@ class AdminController extends Controller
 
     }
 
-    public function delete_user($id){
+    public function delete_user(Request $request){
 
-        $users = User::findOrFail($id);
+        $user_id = $request->delete_user_id;
+        $users = User::findOrFail($user_id);
         $users->delete();
         return redirect(route('users'))->with('error', 'User Deleted successfully');
-
     }
 
     public function edit_user($id){
