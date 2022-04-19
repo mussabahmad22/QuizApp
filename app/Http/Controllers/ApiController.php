@@ -348,39 +348,39 @@ class ApiController extends Controller
                 return response()->json($res);
             }
 
-            $current_time = Carbon::now()->format('H:i:m');
+            $current_time = Carbon::now("Asia/Karachi")->format('H:i:m');
 
             if ($exe->time_duration == 30) {
 
-                $end_time = Carbon::now()->addMinutes(30)->format('H:i:m');
+                $end_time = Carbon::now("Asia/Karachi")->addMinutes(30)->format('H:i:m');
             }
             if ($exe->time_duration == 60) {
 
-                $end_time = Carbon::now()->addMinutes(60)->format('H:i:m');
+                $end_time = Carbon::now("Asia/Karachi")->addMinutes(60)->format('H:i:m');
             }
             if ($exe->time_duration == 90) {
 
-                $end_time = Carbon::now()->addMinutes(90)->format('H:i:m');
+                $end_time = Carbon::now("Asia/Karachi")->addMinutes(90)->format('H:i:m');
             }
             if ($exe->time_duration == 120) {
 
-                $end_time = Carbon::now()->addMinutes(120)->format('H:i:m');
+                $end_time = Carbon::now("Asia/Karachi")->addMinutes(120)->format('H:i:m');
             }
             if ($exe->time_duration == 150) {
 
-                $end_time = Carbon::now()->addMinutes(150)->format('H:i:m');
+                $end_time = Carbon::now("Asia/Karachi")->addMinutes(150)->format('H:i:m');
             }
             if ($exe->time_duration == 180) {
 
-                $end_time = Carbon::now()->addMinutes(180)->format('H:i:m');
+                $end_time = Carbon::now("Asia/Karachi")->addMinutes(180)->format('H:i:m');
             }
             if ($exe->time_duration == 210) {
 
-                $end_time = Carbon::now()->addMinutes(210)->format('H:i:m');
+                $end_time = Carbon::now("Asia/Karachi")->addMinutes(210)->format('H:i:m');
             }
             if ($exe->time_duration == 240) {
 
-                $end_time = Carbon::now()->addMinutes(240)->format('H:i:m');
+                $end_time = Carbon::now("Asia/Karachi")->addMinutes(240)->format('H:i:m');
             }
 
             $quiz = new Quiz();
@@ -433,7 +433,7 @@ class ApiController extends Controller
             }
         } else {
 
-            $current_time = Carbon::now()->format('H:i:m');
+            $current_time = Carbon::now("Asia/Karachi")->format('H:i:m');
             $end_time = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->value('end_time');
 
 
@@ -565,7 +565,7 @@ class ApiController extends Controller
 
     public function quiz_submit(Request $request)
     {
-        $current_time = Carbon::now()->format('H:i:m');
+        $current_time = Carbon::now("Asia/Karachi")->format('H:i:m');
         $query = Quiz::where('user_id',  $request->user_id)->where('exercise_id', $request->exe_id)->get();
         $end_time = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->value('end_time');
         $answer = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $request->ques_id)->get();

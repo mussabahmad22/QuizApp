@@ -141,7 +141,7 @@
                                                 @error('time_duration')
                                                 {{$message}}
                                                 @enderror
-                                                <option selected>Select Quiz Time</option>
+                                                <option value="">Select Quiz Time</option>
                                                 <option value="30">30 minutes</option>
                                                 <option value="60">1 Hour</option>
                                                 <option value="90">1.5 Hour</option>
