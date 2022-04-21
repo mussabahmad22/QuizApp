@@ -22,12 +22,7 @@ use App\Models\User;
 
 Route::get('/', function () {
     return view('auth.login');
-});
-
-//-----------------By Default breeze Route--------------------------
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
+})->middleware(['auth', 'user', 'admin']);
 
 // USER DASHBOARD
 Route::get('/dashboard', function () {

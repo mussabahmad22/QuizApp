@@ -465,7 +465,7 @@ class ApiController extends Controller
                     $res['data'] = [];
                     return response()->json($res);
                 }
-                
+
 
                 $question_list = array();
                 $user_ans = array();
@@ -490,7 +490,6 @@ class ApiController extends Controller
                     if ($user_answer) {
 
                         $ques->user_answer = $user_answer->user_ans;
-
                     } else {
 
                         $ques->user_answer = "";
@@ -773,6 +772,38 @@ class ApiController extends Controller
         return response()->json($res);
     }
 
+    //==============================Review Api ===============================
+
+    public function review(Request $request)
+    {
+
+        $questions = Question::where('exercise_id', $request->exe_id)->get();
+        if (count($questions) == 0) {
+
+            $res['status'] = false;
+            $res['message'] = "Questions Not Found Against Exercise!";
+            $res['data'] = [];
+            return response()->json($res);
+        }
+        $user_ans = array();
+        foreach ($questions as $ques) {
+
+            $answers = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques->id)->first();
+
+            if ($answers) {
+                $ques->user_ans = $answers->user_ans;
+            } else {
+                $ques->user_ans = "";
+            }
+            array_push($user_ans, $ques);
+        }
+
+        $res['status'] = true;
+        $res['message'] = "Question Review!!";
+        $res['data']['question_list'] = $questions;
+        return response()->json($res);
+    }
+
     //=============================== User Login Api==========================
     public function login(Request $request)
     {
@@ -849,7 +880,7 @@ class ApiController extends Controller
     {
 
         $query = Blog::select('post_title')->where('cat_id', $request->cat_id)->get();
-        if ($query) {
+        if (is_null($query)) {
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
@@ -1001,11 +1032,16 @@ class ApiController extends Controller
     //================== Delete Bookmark Api ==================================
     public function delete_bookmark(Request $request)
     {
-        $bookmark = Bookmark::find($request->bookmark_id);
+        $bookmark = Bookmark::where('user_id', $request->user_id)->where('cat_id', $request->cat_id)->where('exercise_id', $request->exercise_id)->where('question_id', $request->question_id)->first();
         if (is_null($bookmark)) {
-            return response()->json(['message' => 'Record Not Found!']);
+            $res['status'] = false;
+            $res['message'] = "Record Not Found!";
+            return response()->json([$res]);
+        } else {
+            $bookmark->delete();
+            $res['status'] = True;
+            $res['message'] = "You have removed bookmark Sucessfully";
+            return response()->json($res);
         }
-        $bookmark->delete();
-        return response()->json($bookmark);
     }
 }
