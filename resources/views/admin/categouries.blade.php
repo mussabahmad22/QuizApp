@@ -23,7 +23,7 @@
                         <div class="icon">
                             <i class="nav-icon fas fa-chart-pie"></i>
                         </div>
-                        <a href="{{url('/exercise/'.$cat->id)}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{route('exercise',['id' => $cat->id])}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 @endforeach

@@ -112,7 +112,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form type="submit" action="{{url('question_delete')}}" method="post">
+                            <form type="submit" action="{{route('question_delete')}}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <div class="intro-y col-span-12 lg:col-span-8 p-5">
@@ -143,7 +143,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form type="submit" action="{{url('add_questions/'.$exe->id)}}" method="post">
+                            <form type="submit" action="{{route('add_questions',['id' => $exe->id])}}" method="post">
                                 @csrf
                                 <div class="intro-y col-span-12 lg:col-span-8 p-5">
                                     <div class="grid grid-cols-12 gap-4 row-gap-5">
@@ -233,7 +233,7 @@
                                             <label class="form-label">Right Option*</label>
                                             <select class="form-control form-select-lg mb-3" name="options"
                                                 aria-label=".form-select-lg example">
-                                                <option selected>Select Right Option</option>
+                                                <option value="">Select Right Option</option>
                                                 <option value="1">Option 1</option>
                                                 <option value="2">Option 2</option>
                                                 <option value="3">Option 3</option>
@@ -293,7 +293,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form type="submit" action="{{url('question_update')}}" method="post">
+                            <form type="submit" action="{{route('question_update')}}" method="post">
                                 @csrf
                                 @method('PUT')
                                 <div class="intro-y col-span-12 lg:col-span-8 p-5">
@@ -385,7 +385,7 @@
                                             <label class="form-label">Right Option*</label>
                                             <select class="form-control form-select-lg mb-3" name="options"
                                             id="options" aria-label=".form-select-lg example">
-                                                <option selected>Select Right Option</option>
+                                                <option value="">Select Right Option</option>
                                                 <option value="1">Option 1</option>
                                                 <option value="2">Option 2</option>
                                                 <option value="3">Option 3</option>

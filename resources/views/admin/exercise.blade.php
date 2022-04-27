@@ -62,7 +62,7 @@
                         @foreach($query as $que)
                         <tr>
                             <th scope="row">{{ $que->id }}</th>
-                            <td> <a href="{{url('questions/'.$que->id)}}"><button type="button" class="btn btn-dark">{{
+                            <td> <a href="{{route('questions',['id' => $que->id])}}"><button type="button" class="btn btn-dark">{{
                                         $que->exercise_name }}</button></a></td>
                             <td><button type="button" value="{{$que->id}}" class="btn btn-dark editbtn">Edit</button>
                                 <!-- Button trigger modal -->
@@ -89,7 +89,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form type="submit" action="{{url('exercise_delete')}}" method="post">
+                            <form type="submit" action="{{route('exercise_delete')}}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <div class="intro-y col-span-12 lg:col-span-8 p-5">
@@ -120,7 +120,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form type="submit" action="{{url('add_exercise/'.$cat->id)}}" method="post">
+                            <form type="submit" action="{{route('add_exercise',['id' => $cat->id])}}" method="post">
                                 @csrf
                                 <div class="intro-y col-span-12 lg:col-span-8 p-5">
                                     <div class="grid grid-cols-12 gap-4 row-gap-5">
@@ -175,7 +175,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form type="submit" action="{{url('exercise_update')}}" method="post">
+                            <form type="submit" action="{{route('exercise_update')}}" method="post">
                                 @csrf
                                 @method('PUT')
                                 <div class="intro-y col-span-12 lg:col-span-8 p-5">

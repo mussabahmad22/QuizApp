@@ -18,7 +18,7 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-12 text-right">
-                                    <td><a href="{{url('add_users')}}"><button type="button" class="btn btn-dark">+Add
+                                    <td><a href="{{route('userform')}}"><button type="button" class="btn btn-dark">+Add
                                                 New</button></a></td>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                                         <th scope="row">{{ $user->id }}</th>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
-                                        <td><a href="{{url('edit_user/'.$user->id)}}"><button type="button"
+                                        <td><a href="{{route('edit_user',['id' => $user->id])}}"><button type="button"
                                                     class="btn btn-dark">Edit</button></a>
                                             <!-- Button trigger modal -->
                                             <button type="button" id="deletebtn" value="{{$user->id}}"
@@ -99,7 +99,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form type="submit" action="{{url('delete_user')}}" method="post">
+                                    <form type="submit" action="{{route('delete_user')}}" method="post">
                                         @csrf
                                         @method('DELETE')
                                         <div class="intro-y col-span-12 lg:col-span-8 p-5">

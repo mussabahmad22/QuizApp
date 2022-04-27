@@ -87,7 +87,7 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "User Can't Insert Sucessfully";
-            $res['data'] = [];
+            //$res['data'] = [];
             return response()->json($res);
         } else {
 
@@ -256,7 +256,7 @@ class ApiController extends Controller
                     $que->total_questions = $ques;
                 } else {
 
-                    $que->total_questions = 'No Record Found!!';
+                    $que->total_questions = 0;
                 }
 
                 array_push($total_questions, $que);
@@ -318,6 +318,8 @@ class ApiController extends Controller
         $query = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->get();
         $total_questions = Question::where('exercise_id', $request->exe_id)->count();
         $total_marks = $total_questions * 4;
+        $date = date('Y-m-d');
+        $quiz = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->first();
 
         if (count($query) == 0) {
 
@@ -399,11 +401,14 @@ class ApiController extends Controller
             } else {
 
                 $question_list = array();
+                $user_ans = array();
                 foreach ($questions as $ques) {
 
                     $ques_id = $ques->id;
 
                     $bookmark = Bookmark::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques_id)->count();
+
+                    $user_answer = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques_id)->first();
 
                     if ($bookmark == 1) {
 
@@ -414,6 +419,16 @@ class ApiController extends Controller
                     }
 
                     array_push($question_list, $ques);
+
+                    if ($user_answer) {
+
+                        $ques->user_answer = $user_answer->user_ans;
+                    } else {
+
+                        $ques->user_answer = "";
+                    }
+
+                    array_push($user_ans, $ques);
                 }
 
                 $res['status'] = true;
@@ -435,9 +450,8 @@ class ApiController extends Controller
 
             $current_time = Carbon::now("Asia/Karachi")->format('H:i:m');
             $end_time = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->value('end_time');
-
-
-            if ($end_time >= $current_time) {
+         
+            if ($end_time >= $current_time && $date == $quiz->created_at->format('Y-m-d')) {
 
                 $user = User::find($request->user_id);
                 if (is_null($user)) {
@@ -514,9 +528,9 @@ class ApiController extends Controller
                 $res['data']['Total_Marks'] = $total_marks;
                 $res['data']['Total_Questions'] = $total_questions;
                 $res['data']['questions'] = $questions;
-
                 return response()->json($res);
-            } else if ($end_time < $current_time) {
+
+            } else if ($end_time < $current_time || $date != $quiz->created_at->format('Y-m-d')) {
 
                 $questions = Question::where('exercise_id', $request->exe_id)->get();
                 $total_questions = Question::where('exercise_id', $request->exe_id)->count();
@@ -548,7 +562,13 @@ class ApiController extends Controller
                         $unans = $unans + 1;
                     }
                 }
-
+                $marks = $score_right_ans - $wrong_ans;
+                $percentage = $marks / $total_marks * 100;
+                if ($percentage < 0) {
+                    $percentage = 0;
+                } else {
+                    $percentage;
+                }
                 $res['status'] = True;
                 $res['message'] = "Time Up!";
                 $res['data']['Total_Marks'] = $total_marks;
@@ -557,6 +577,7 @@ class ApiController extends Controller
                 $res['data']['Correct_Answers'] = $right_ans;
                 $res['data']['Wrong_Answers'] = $wrong_ans;
                 $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+                $res['data']['Percentage'] = $percentage . "%";
                 return response()->json($res);
             }
         }
@@ -567,15 +588,17 @@ class ApiController extends Controller
         $current_time = Carbon::now("Asia/Karachi")->format('H:i:m');
         $query = Quiz::where('user_id',  $request->user_id)->where('exercise_id', $request->exe_id)->get();
         $end_time = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->value('end_time');
+        $quiz = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->first();
         $answer = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $request->ques_id)->get();
         $answer_object = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $request->ques_id)->first();
         $total_questions = Question::where('exercise_id', $request->exe_id)->count();
         $total_answers = Answer::where('user_id',  $request->user_id)->where('exercise_id', $request->exe_id)->count();
         $question = Question::where('exercise_id', $request->exe_id)->where('id', $request->ques_id)->get();
+        $date = date('Y-m-d');
 
         if (count($query) == 1) {
 
-            if ($end_time >= $current_time) {
+            if ($end_time >= $current_time && $date == $quiz->created_at->format('Y-m-d')) {
 
                 if ($total_questions == $total_answers) {
 
@@ -609,7 +632,13 @@ class ApiController extends Controller
                             $unans = $unans + 1;
                         }
                     }
-
+                    $marks = $score_right_ans - $wrong_ans;
+                    $percentage = $marks / $total_marks * 100;
+                    if ($percentage < 0) {
+                        $percentage = 0;
+                    } else {
+                        $percentage;
+                    }
                     $res['status'] = True;
                     $res['message'] = "You Have Solved Exercise Completely!";
                     $res['data']['Total_Marks'] = $total_marks;
@@ -618,6 +647,7 @@ class ApiController extends Controller
                     $res['data']['Correct_Answers'] = $right_ans;
                     $res['data']['Wrong_Answers'] = $wrong_ans;
                     $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+                    $res['data']['Percentage'] = $percentage . "%";
                     return response()->json($res);
                 } else {
 
@@ -650,7 +680,7 @@ class ApiController extends Controller
                         return response()->json($res);
                     }
                 }
-            } else if ($end_time < $current_time) {
+            } else if ($end_time < $current_time || $date != $quiz->created_at->format('Y-m-d')) {
 
                 $questions = Question::where('exercise_id', $request->exe_id)->get();
                 $total_questions = Question::where('exercise_id', $request->exe_id)->count();
@@ -682,7 +712,13 @@ class ApiController extends Controller
                         $unans = $unans + 1;
                     }
                 }
-
+                $marks = $score_right_ans - $wrong_ans;
+                $percentage = $marks / $total_marks * 100;
+                if ($percentage < 0) {
+                    $percentage = 0;
+                } else {
+                    $percentage;
+                }
                 $res['status'] = true;
                 $res['message'] = "Time Up!";
                 $res['data']['Total_Marks'] = $total_marks;
@@ -691,6 +727,7 @@ class ApiController extends Controller
                 $res['data']['Correct_Answers'] = $right_ans;
                 $res['data']['Wrong_Answers'] = $wrong_ans;
                 $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+                $res['data']['Percentage'] = $percentage . "%";
                 return response()->json($res);
             }
         } else {
@@ -760,7 +797,13 @@ class ApiController extends Controller
                 $unans = $unans + 1;
             }
         }
-
+        $marks = $score_right_ans - $wrong_ans;
+        $percentage = $marks / $total_marks * 100;
+        if ($percentage < 0) {
+            $percentage = 0;
+        } else {
+            $percentage;
+        }
         $res['status'] = true;
         $res['message'] = "Final Result!!";
         $res['data']['Total_Marks'] = $total_marks;
@@ -769,10 +812,69 @@ class ApiController extends Controller
         $res['data']['Correct_Answers'] = $right_ans;
         $res['data']['Wrong_Answers'] = $wrong_ans;
         $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+        $res['data']['Percentage'] = $percentage . "%";
         return response()->json($res);
     }
+    //====================================Pending Quiz By User Api ===================================
+    public function pending(Request $request)
+    {
+        $user = User::find($request->user_id);
+        if (is_null($user)) {
 
-    //==============================Review Api ===============================
+            $res['status'] = false;
+            $res['message'] = "User Not Found!";
+            $res['data'] = [];
+            return response()->json($res);
+        }
+
+        $query = Quiz::where('user_id',  $request->user_id)->get();
+        $current_time = Carbon::now("Asia/Karachi")->format('H:i:m');
+        $date = date('Y-m-d');
+
+        $pending_list = array();
+        $exe_id = array();
+
+        if (count($query) > 0) {
+
+            foreach ($query as $que) {
+
+                if ($current_time <= $que->end_time && $date == $que->created_at->format('Y-m-d')) {
+
+                    $que->time_remaining  = \Carbon\Carbon::parse($que->end_time)->diffInMinutes(\Carbon\Carbon::parse($current_time));
+                 
+                } else {
+
+                    $que->time_remaining  = 0;
+                    
+                }
+                array_push($pending_list, $que);
+
+            }
+            if ($pending_list) {
+
+                $que->exercise_id = $que->exercise_id;
+                array_push($exe_id, $que);
+
+                $res['status'] = True;
+                $res['message'] = "Pending Quiz List Against User!!";
+                $res['data'] = $pending_list;
+                return response()->json($res);
+            } else {
+           
+                $res['status'] = false;
+                $res['message'] = "No Quiz Available!!";
+                $res['data'] = [];
+                return response()->json($res);
+            }
+        } else {
+            $res['status'] = false;
+            $res['message'] = "No Quiz Available!!";
+            $res['data'] = [];
+            return response()->json($res);
+        }
+    }
+
+    //==============================Review Api ============================================
 
     public function review(Request $request)
     {
@@ -862,7 +964,7 @@ class ApiController extends Controller
     {
         $blog = blog_category::get();
 
-        if (is_null($blog)) {
+        if (count($blog) == 0) {
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
@@ -879,8 +981,8 @@ class ApiController extends Controller
     public function blog_posts(Request $request)
     {
 
-        $query = Blog::select('post_title')->where('cat_id', $request->cat_id)->get();
-        if (is_null($query)) {
+        $query = Blog::select('post_title', 'id')->where('cat_id', $request->cat_id)->get();
+        if (count($query) == 0) {
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
@@ -897,17 +999,29 @@ class ApiController extends Controller
     //===============================Show Blog posts Api Routes==========================================
     public function show_blog_post(Request $request)
     {
-        $blog_posts = Blog::find($request->cat_id);
+
+        $blog_posts_list = Blog::where('cat_id', $request->cat_id)->whereNotIn('id', [$request->blog_id])->get();
+        if (count($blog_posts_list) == 0) {
+
+            $res['status'] = false;
+            $res['message'] = "Blog List Not Found!";
+            $res['data'] = [];
+            return response()->json($res);
+        }
+        $blog_posts = Blog::where('cat_id', $request->cat_id)->where('id', $request->blog_id)->first();
+
         if (is_null($blog_posts)) {
 
             $res['status'] = false;
-            $res['message'] = "Record Not Found!";
+            $res['message'] = "Blog Against category Not Found!";
             $res['data'] = [];
             return response()->json($res);
         } else {
+
             $res['status'] = true;
             $res['message'] = "Blog";
-            $res['data'] =  $blog_posts;
+            $res['Blog'] =  $blog_posts;
+            $res['data'] = $blog_posts_list;
             return response()->json($res);
         }
     }
@@ -942,6 +1056,8 @@ class ApiController extends Controller
         }
 
         $bookmark = Bookmark::where('user_id', $request->user_id)->where('cat_id', $request->cat_id)->where('exercise_id', $request->exercise_id)->get();
+
+
 
         if (count($bookmark) == 0) {
 
@@ -1000,21 +1116,31 @@ class ApiController extends Controller
 
         $ques = Question::where('exercise_id', $request->exercise_id)->where('id', $request->question_id)->get();
 
+        $answer = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exercise_id)->where('question_id', $request->question_id)->get();
+
         if (count($bookmark) == 0) {
 
             if (count($ques) == 1) {
 
-                $mark = new Bookmark();
-                $mark->user_id = $request->user_id;
-                $mark->cat_id = $request->cat_id;
-                $mark->exercise_id = $request->exercise_id;
-                $mark->question_id = $request->question_id;
-                $mark->save();
+                if (count($answer) == 0) {
 
-                $res['status'] = True;
-                $res['message'] = "Your bookmark added Sucessfully";
-                $res['data'] =  $mark;
-                return response()->json($res);
+                    $mark = new Bookmark();
+                    $mark->user_id = $request->user_id;
+                    $mark->cat_id = $request->cat_id;
+                    $mark->exercise_id = $request->exercise_id;
+                    $mark->question_id = $request->question_id;
+                    $mark->save();
+
+                    $res['status'] = True;
+                    $res['message'] = "Your bookmark added Sucessfully";
+                    $res['data'] =  $mark;
+                    return response()->json($res);
+                } else {
+                    $res['status'] = False;
+                    $res['message'] = "You have Solved This Question!!";
+                    $res['data'] =  "";
+                    return response()->json($res);
+                }
             } else {
                 $res['status'] = False;
                 $res['message'] = "Question Cant Exist Against Exercise !!";

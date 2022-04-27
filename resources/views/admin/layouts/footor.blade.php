@@ -1,6 +1,6 @@
 <footer class="main-footer text-center">
     <strong> © Copyright 2016 - 2022</strong><br>
-    All rights reserved. Powered By <a href="{{url('/admin')}}">QuizApp</a>
+    All rights reserved. Powered By <a href="{{route('admin')}}">QuizApp</a>
 </footer>
 
 <!-- Control Sidebar -->
@@ -36,7 +36,7 @@
 <script src="{{asset('plugins/jquery-knob/jquery.knob.min.js')}}"></script>
 <!-- daterangepicker -->
 <script src="{{asset('plugins/moment/moment.min.js')}}"></script>
-<script src="plugins/daterangepicker/daterangepicker.js')}}"></script>
+<script src="{{asset('plugins/daterangepicker/daterangepicker.js')}}"></script>
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{asset('plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <!-- Summernote -->

@@ -23,7 +23,7 @@ class AdminController extends Controller
 
     public function users(){
 
-        $users =  User::all();
+        $users =  User::where('role', 'user')->get();
         return view('admin.users',compact('users'));
     }
 
@@ -385,7 +385,7 @@ class AdminController extends Controller
         $url = url('update_blog_posts') ."/". $id;
         $title = 'EDIT BLOG POST';
         $text = 'Update';
-        return view('admin.add_blog_post',['cat'=>$cat,'post'=> $post , 'url'=>$url ,'title'=>$title ,'text'=>$text]);
+        return view('admin.add_blog_post',['cat'=>$cat, 'post'=> $post , 'url'=>$url ,'title'=>$title ,'text'=>$text]);
 
     }
 
@@ -396,9 +396,8 @@ class AdminController extends Controller
         $blog->post_title = $request->post_title;
         $blog->post_desc = $request->desc;
         $blog->save();
-        return redirect(route('blog_posts',$id))->with('success', 'Blog Updated successfully');
+        return redirect(route('blog_posts', $blog->cat_id))->with('success', 'Blog Updated successfully');
      
-
     }
 
     public function blog_post_delete(Request $request){
@@ -413,7 +412,8 @@ class AdminController extends Controller
     public function show_blog_post($id){
 
         $blog_posts = Blog::find($id);
-        return view('admin.show_blog_post',compact('blog_posts'));
+        $blog_category = blog_category::find($id);
+        return view('admin.show_blog_post',compact('blog_posts','blog_category'));
 
     }
 

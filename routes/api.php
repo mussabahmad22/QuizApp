@@ -56,6 +56,7 @@ Route::post('/quiz_start' , [ApiController::class, 'quiz_start']);
 Route::post('/quiz' , [ApiController::class, 'quiz_submit']);
 Route::post('/result' , [ApiController::class, 'result']);
 Route::get('/review' , [ApiController::class, 'review']);
+Route::get('/pending' , [ApiController::class, 'pending']);
 
 //=============================== User Login ==========================
 Route::post('/login',  [ApiController::class, 'login']);

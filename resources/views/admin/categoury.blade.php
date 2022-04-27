@@ -19,7 +19,7 @@
                 </div>
             </div>
             @endif
-            <!-- @if(session()->has('error'))
+            @if(session()->has('error'))
             <div class="col-sm-12">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{ session()->get('error') }}
@@ -28,20 +28,9 @@
                     </button>
                 </div>
             </div>
-            @endif -->
-            <!-- @if ($errors->any())
-            <div class="col-sm-12">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-            @endif -->
+            @endif
             <!-- ==========================ADD Categoury Form ==================================== -->
-            <form type="submit" action="{{url('categoury')}}" method="POST">
+            <form type="submit" action="{{route('addCategoury')}}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <div class="mb-3">
@@ -100,7 +89,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form type="submit" action="{{url('categoury_delete')}}" method="post">
+                    <form type="submit" action="{{route('categoury_delete')}}" method="post">
                         @csrf
                         @method('DELETE')
                         <div class="intro-y col-span-12 lg:col-span-8 p-5">
@@ -131,7 +120,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form type="submit" action="{{url('categoury_update')}}" method="post">
+                    <form type="submit" action="{{route('categoury_update')}}" method="post">
                         @csrf
                         @method('PUT')
                         <div class="intro-y col-span-12 lg:col-span-8 p-5">

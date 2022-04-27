@@ -23,7 +23,7 @@
                         <div class="icon">
                             <i class="nav-icon fas fa-blog"></i>
                         </div>
-                        <a href="{{url('blog_posts/'. $blog->id)}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{route('blog_posts',['id' => $blog->id])}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 @endforeach

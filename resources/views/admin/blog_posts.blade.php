@@ -42,7 +42,7 @@
             </div>
             @endif
             <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-                <a href="{{url('add_blog_posts/'.$blog_category->id)}}"><button type="button" class="btn btn-dark">Add
+                <a href="{{route('show_add_blog_posts',['id' => $blog_category->id])}}"><button type="button" class="btn btn-dark">Add
                         Blogs</button></a>
             </div>
 
@@ -61,9 +61,9 @@
                         @foreach($query as $que)
                         <tr>
                             <th scope="row">{{ $que->id }}</th>
-                            <td> <a href="{{url('show_blog_post/'.$que->id)}}"><button type="button" class="btn btn-dark">{{
+                            <td> <a href="{{route('show_blog_post',['id' => $que->id])}}"><button type="button" class="btn btn-dark">{{
                                         $que->post_title }}</button></a></td>
-                            <td><a href="{{url('edit_blog_posts/'.$que->id)}}"><button type="button"
+                            <td><a href="{{route('edit_blog_posts',['id' => $que->id])}}"><button type="button"
                                         class="btn btn-dark editbtn">Edit</button></a>
                                 <!-- Button trigger modal -->
                                 <button type="button" value="{{$que->id}}"
@@ -87,7 +87,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form type="submit" action="{{url('blog_post_delete')}}" method="post">
+                            <form type="submit" action="{{route('blog_post_delete')}}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <div class="intro-y col-span-12 lg:col-span-8 p-5">

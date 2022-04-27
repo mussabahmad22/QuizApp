@@ -18,7 +18,7 @@
                 </div>
             </div>
             @endif
-            <!-- @if(session()->has('error'))
+               @if(session()->has('error'))
             <div class="col-sm-12">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     {{ session()->get('error') }}
@@ -28,19 +28,8 @@
                 </div>
             </div>
             @endif
-            @if ($errors->any())
-            <div class="col-sm-12">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-            @endif -->
             <!-- ==========================ADD Blog Form ==================================== -->
-            <form type="submit" action="{{url('blog')}}" method="POST">
+            <form type="submit" action="{{route('addblog')}}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <div class="mb-3">
@@ -97,7 +86,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form type="submit" action="{{url('blog_delete')}}" method="post">
+                    <form type="submit" action="{{route('blog_delete')}}" method="post">
                         @csrf
                         @method('DELETE')
                         <div class="intro-y col-span-12 lg:col-span-8 p-5">
@@ -127,7 +116,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form type="submit" action="{{url('blog_update')}}" method="post">
+                    <form type="submit" action="{{route('blog_update')}}" method="post">
                         @csrf
                         @method('PUT')
                         <div class="intro-y col-span-12 lg:col-span-8 p-5">
