@@ -33,7 +33,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
-            $res['data'] = [];
             return response()->json($res, 404);
         } else {
             $res['status'] = true;
@@ -51,7 +50,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         } else {
 
@@ -76,7 +74,6 @@ class ApiController extends Controller
             $msg = array_values($err)[0][0];
             $res['status'] = false;
             $res['message'] = $msg;
-            $res['data'] = [];
 
             return response()->json($res);
         }
@@ -87,7 +84,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "User Can't Insert Sucessfully";
-            //$res['data'] = [];
             return response()->json($res);
         } else {
 
@@ -117,7 +113,6 @@ class ApiController extends Controller
             $msg = array_values($err)[0][0];
             $res['status'] = false;
             $res['message'] = $msg;
-            $res['data'] = [];
 
             return response()->json($res);
         }
@@ -127,7 +122,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "User Can't Update Sucessfully";
-            $res['data'] = [];
             return response()->json($res);
         } else {
 
@@ -156,7 +150,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         } else {
             $res['status'] = true;
@@ -228,7 +221,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         } else {
 
@@ -280,7 +272,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         }
 
@@ -299,7 +290,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         } else {
 
@@ -328,7 +318,6 @@ class ApiController extends Controller
 
                 $res['status'] = false;
                 $res['message'] = "User Not Found!";
-                $res['data'] = [];
                 return response()->json($res);
             }
 
@@ -337,7 +326,6 @@ class ApiController extends Controller
 
                 $res['status'] = false;
                 $res['message'] = "Exercise Not Found!";
-                $res['data'] = [];
                 return response()->json($res);
             }
 
@@ -346,7 +334,6 @@ class ApiController extends Controller
 
                 $res['status'] = false;
                 $res['message'] = "Questions Not Found Against Exercise!";
-                $res['data'] = [];
                 return response()->json($res);
             }
 
@@ -410,25 +397,25 @@ class ApiController extends Controller
 
                     $user_answer = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques_id)->first();
 
+                    if ($user_answer) {
+
+                        $ques->user_answer = $user_answer->user_ans;
+
+                    }else{
+
+                        $ques->user_answer = "";
+                    }
+                    array_push($user_ans, $ques);
+
                     if ($bookmark == 1) {
 
                         $ques->bookmark_status = true;
+                        $ques->user_answer=0;
                     } else {
 
                         $ques->bookmark_status = false;
                     }
-
                     array_push($question_list, $ques);
-
-                    if ($user_answer) {
-
-                        $ques->user_answer = $user_answer->user_ans;
-                    } else {
-
-                        $ques->user_answer = "";
-                    }
-
-                    array_push($user_ans, $ques);
                 }
 
                 $res['status'] = true;
@@ -458,7 +445,6 @@ class ApiController extends Controller
 
                     $res['status'] = false;
                     $res['message'] = "User Not Found!";
-                    $res['data'] = [];
                     return response()->json($res);
                 }
 
@@ -467,7 +453,6 @@ class ApiController extends Controller
 
                     $res['status'] = false;
                     $res['message'] = "Exercise Not Found!";
-                    $res['data'] = [];
                     return response()->json($res);
                 }
 
@@ -476,7 +461,6 @@ class ApiController extends Controller
 
                     $res['status'] = false;
                     $res['message'] = "Questions Not Found!";
-                    $res['data'] = [];
                     return response()->json($res);
                 }
 
@@ -490,26 +474,27 @@ class ApiController extends Controller
                     $bookmark = Bookmark::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques_id)->count();
 
                     $user_answer = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques_id)->first();
+                  
+                    if ($user_answer) {
+
+                        $ques->user_answer = $user_answer->user_ans;
+
+                    }else{
+
+                        $ques->user_answer = "";
+                    }
+                    array_push($user_ans, $ques);
 
                     if ($bookmark == 1) {
 
                         $ques->bookmark_status = true;
+                        $ques->user_answer=0;
                     } else {
 
                         $ques->bookmark_status = false;
                     }
-
                     array_push($question_list, $ques);
 
-                    if ($user_answer) {
-
-                        $ques->user_answer = $user_answer->user_ans;
-                    } else {
-
-                        $ques->user_answer = "";
-                    }
-
-                    array_push($user_ans, $ques);
                 }
                 $query = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->value('id');
                 $quiz = Quiz::find($query);
@@ -542,7 +527,7 @@ class ApiController extends Controller
 
                 foreach ($questions as $ques) {
 
-                    $answers = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques->id)->first();
+                    $answers = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques->id)->whereNotIn('user_ans', [0])->first();
 
                     if ($answers) {
 
@@ -569,15 +554,15 @@ class ApiController extends Controller
                 } else {
                     $percentage;
                 }
-                $res['status'] = True;
+                $res['status'] = false;
                 $res['message'] = "Time Up!";
-                $res['data']['Total_Marks'] = $total_marks;
-                $res['data']['Total_Questions'] = $total_questions;
-                $res['data']['Un_Attempt_Questions'] = $unans;
-                $res['data']['Correct_Answers'] = $right_ans;
-                $res['data']['Wrong_Answers'] = $wrong_ans;
-                $res['data']['total_score'] = $score_right_ans - $wrong_ans;
-                $res['data']['Percentage'] = $percentage . "%";
+                // $res['data']['Total_Marks'] = $total_marks;
+                // $res['data']['Total_Questions'] = $total_questions;
+                // $res['data']['Un_Attempt_Questions'] = $unans;
+                // $res['data']['Correct_Answers'] = $right_ans;
+                // $res['data']['Wrong_Answers'] = $wrong_ans;
+                // $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+                // $res['data']['Percentage'] = $percentage . "%";
                 return response()->json($res);
             }
         }
@@ -612,7 +597,7 @@ class ApiController extends Controller
 
                     foreach ($questions as $ques) {
 
-                        $answers = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques->id)->first();
+                        $answers = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques->id)->whereNotIn('user_ans', [0])->first();
 
                         if ($answers) {
 
@@ -669,7 +654,6 @@ class ApiController extends Controller
                         } else {
                             $res['status'] = false;
                             $res['message'] = "Exercise Against Question Does Not Exist!!";
-                            $res['data'] = [];
                             return response()->json($res);
                         }
                     } else {
@@ -692,7 +676,7 @@ class ApiController extends Controller
 
                 foreach ($questions as $ques) {
 
-                    $answers = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques->id)->first();
+                    $answers = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques->id)->whereNotIn('user_ans', [0])->first();
 
                     if ($answers) {
 
@@ -734,7 +718,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Quiz Start First!";
-            $res['data'] = [];
             return response()->json($res);
         }
     }
@@ -746,7 +729,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "User Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         }
 
@@ -755,7 +737,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Exercise Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         }
         $questions = Question::where('exercise_id', $request->exe_id)->get();
@@ -763,9 +744,14 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Questions Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         }
+        $quiz = Quiz::where('user_id',  $request->user_id)->where('exercise_id', $request->exe_id)->first();
+        if($quiz){
+
+            $quiz->status = 1;
+        }
+        $quiz->save();
 
         $questions = Question::where('exercise_id', $request->exe_id)->get();
         $total_questions = Question::where('exercise_id', $request->exe_id)->count();
@@ -777,7 +763,9 @@ class ApiController extends Controller
 
         foreach ($questions as $ques) {
 
-            $answers = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques->id)->first();
+            $answers = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques->id)->whereNotIn('user_ans', [0])->first();
+
+
 
             if ($answers) {
 
@@ -804,6 +792,8 @@ class ApiController extends Controller
         } else {
             $percentage;
         }
+      
+
         $res['status'] = true;
         $res['message'] = "Final Result!!";
         $res['data']['Total_Marks'] = $total_marks;
@@ -823,16 +813,16 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "User Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         }
 
-        $query = Quiz::where('user_id',  $request->user_id)->get();
+        $query = Quiz::where('user_id',  $request->user_id)->whereNotIn('status', [1])->get();
         $current_time = Carbon::now("Asia/Karachi")->format('H:i:m');
         $date = date('Y-m-d');
 
         $pending_list = array();
         $exe_id = array();
+        $cat_id = array();
 
         if (count($query) > 0) {
 
@@ -846,8 +836,16 @@ class ApiController extends Controller
 
                     $que->time_remaining  = 0;
                     
-                }
+                }   
                 array_push($pending_list, $que);
+
+                $exe = Exercise::where('id', $que->exercise_id)->first();
+
+                if($exe){
+                    
+                    $que->category_id = $exe->categoury_id;
+                }
+                array_push($cat_id, $que);
 
             }
             if ($pending_list) {
@@ -859,17 +857,16 @@ class ApiController extends Controller
                 $res['message'] = "Pending Quiz List Against User!!";
                 $res['data'] = $pending_list;
                 return response()->json($res);
+
             } else {
            
                 $res['status'] = false;
                 $res['message'] = "No Quiz Available!!";
-                $res['data'] = [];
                 return response()->json($res);
             }
         } else {
             $res['status'] = false;
             $res['message'] = "No Quiz Available!!";
-            $res['data'] = [];
             return response()->json($res);
         }
     }
@@ -884,7 +881,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Questions Not Found Against Exercise!";
-            $res['data'] = [];
             return response()->json($res);
         }
         $user_ans = array();
@@ -921,7 +917,6 @@ class ApiController extends Controller
             $msg = array_values($err)[0][0];
             $res['status'] = false;
             $res['message'] = $msg;
-            $res['data'] = [];
 
             return response()->json($res);
         }
@@ -938,14 +933,12 @@ class ApiController extends Controller
 
                 $res['status'] = false;
                 $res['message'] = "Password mismatch";
-                $res['data'] = [];
                 return response()->json($res);
             }
         } else {
 
             $res['status'] = false;
             $res['message'] = "User does not exist";
-            $res['data'] = [];
             return response()->json($res);
         }
     }
@@ -968,7 +961,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         } else {
             $res['status'] = true;
@@ -986,7 +978,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         } else {
 
@@ -1005,7 +996,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Blog List Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         }
         $blog_posts = Blog::where('cat_id', $request->cat_id)->where('id', $request->blog_id)->first();
@@ -1014,7 +1004,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Blog Against category Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         } else {
 
@@ -1033,7 +1022,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "User Not Found!!";
-            $res['data'] = [];
             return response()->json($res);
         }
 
@@ -1042,7 +1030,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Category Not Found!!";
-            $res['data'] = [];
             return response()->json($res);
         }
 
@@ -1063,7 +1050,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
-            $res['data'] = [];
             return response()->json($res);
         } else {
 
@@ -1081,7 +1067,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "User Not Found!!";
-            $res['data'] = "";
             return response()->json($res);
         }
 
@@ -1090,7 +1075,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Category Not Found!!";
-            $res['data'] = "";
             return response()->json($res);
         }
 
@@ -1099,7 +1083,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Exercise Not Found!!";
-            $res['data'] = "";
             return response()->json($res);
         }
 
@@ -1108,7 +1091,6 @@ class ApiController extends Controller
 
             $res['status'] = false;
             $res['message'] = "Question Not Found!!";
-            $res['data'] = "";
             return response()->json($res);
         }
 
@@ -1138,20 +1120,17 @@ class ApiController extends Controller
                 } else {
                     $res['status'] = False;
                     $res['message'] = "You have Solved This Question!!";
-                    $res['data'] =  "";
                     return response()->json($res);
                 }
             } else {
                 $res['status'] = False;
                 $res['message'] = "Question Cant Exist Against Exercise !!";
-                $res['data'] =  "";
                 return response()->json($res);
             }
         } else {
 
             $res['status'] = false;
             $res['message'] = "You Have Added Already!!";
-            $res['data'] = "";
             return response()->json($res);
         }
     }
@@ -1167,6 +1146,70 @@ class ApiController extends Controller
             $bookmark->delete();
             $res['status'] = True;
             $res['message'] = "You have removed bookmark Sucessfully";
+            return response()->json($res);
+        }
+    }
+
+    public function search_category(Request $request){
+
+        $result = Categoury::where('name', 'LIKE', "%{$request->cat_name}%")->get();
+
+        if (count($result) == 0) {
+            $res['status'] = false;
+            $res['message'] = "Record Not Found!";
+            return response()->json([$res]);
+        } else {
+            $res['status'] = True;
+            $res['message'] = "Search List!!";
+            $res['data'] = $result;
+            return response()->json($res);
+        }
+    }
+
+    public function search_exercise(Request $request){
+
+        $result = Exercise::where('exercise_name', 'LIKE', "%{$request->exe_name}%")->get();
+        
+        if (count($result) == 0) {
+            $res['status'] = false;
+            $res['message'] = "Record Not Found!";
+            return response()->json([$res]);
+        } else {
+            $res['status'] = True;
+            $res['message'] = "Search List!!";
+            $res['data'] = $result;
+            return response()->json($res);
+        }
+    }
+
+    public function search_blog(Request $request){
+
+        $result = blog_category::where('blog_name', 'LIKE', "%{$request->blog_name}%")->get();
+        
+        if (count($result) == 0) {
+            $res['status'] = false;
+            $res['message'] = "Record Not Found!";
+            return response()->json([$res]);
+        } else {
+            $res['status'] = True;
+            $res['message'] = "Search List!!";
+            $res['data'] = $result;
+            return response()->json($res);
+        }
+    }
+
+    public function search_blog_title(Request $request){
+
+        $result = Blog::where('post_title', 'LIKE', "%{$request->post_title}%")->get();
+        
+        if (count($result) == 0) {
+            $res['status'] = false;
+            $res['message'] = "Record Not Found!";
+            return response()->json([$res]);
+        } else {
+            $res['status'] = True;
+            $res['message'] = "Search List!!";
+            $res['data'] = $result;
             return response()->json($res);
         }
     }

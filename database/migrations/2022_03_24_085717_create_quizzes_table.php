@@ -19,6 +19,7 @@ class CreateQuizzesTable extends Migration
             $table->foreignId('exercise_id')->constrained('exercises')->nullable()->default(NULL);
             $table->string('start_time');
             $table->string('end_time');
+            $table->integer('status')->default('0');
             $table->timestamps();
         });
     }

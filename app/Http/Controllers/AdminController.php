@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 
 use Illuminate\Http\Request;
@@ -46,7 +47,7 @@ class AdminController extends Controller
         $users = new User();
         $users->name = $request->name;
         $users->email = $request->email;
-        $users->password = $request->password;
+        $users->password = Hash::make($request->password);
         $users->save();
         return redirect(route('users',compact('users')))->with('success', 'User Added successfully');
 

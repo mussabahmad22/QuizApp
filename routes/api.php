@@ -78,5 +78,13 @@ Route::post('/add_bookmark', [ApiController::class, 'add_bookmark']);
 //================== Delete Bookmark Api ==================================
 Route::get('/delete_bookmark' , [ApiController::class, 'delete_bookmark']);
 
+//================== Search Category Api ================================
+Route::get('/search_category', [ApiController::class, 'search_category']);
+//=============== Search exercises against category by id Api =================
+Route::get('/search_exercise' , [ApiController::class, 'search_exercise']);
+//===============================Search Blog Category Api Route=============================================
+Route::get('/search_blog' , [ApiController::class, 'search_blog']);
+//===============================Search Blog by Title Api Route=============================================
+Route::get('/search_blog_title' , [ApiController::class, 'search_blog_title']);
 
 
