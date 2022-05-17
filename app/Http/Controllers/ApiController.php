@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use App\Models\blog_category;
 use App\Models\Blog;
+use App\Models\Result;
 use Illuminate\Support\Str;
 
 class ApiController extends Controller
@@ -87,9 +88,10 @@ class ApiController extends Controller
             return response()->json($res);
         } else {
 
+            $userss = User::where('email', $request->email)->first();
             $res['status'] = true;
             $res['message'] = "User Insert Sucessfully";
-            $res['data'] = $users;
+            $res['data'] = $userss;
             return response()->json($res);
         }
         return response()->json($users);
@@ -400,8 +402,7 @@ class ApiController extends Controller
                     if ($user_answer) {
 
                         $ques->user_answer = $user_answer->user_ans;
-
-                    }else{
+                    } else {
 
                         $ques->user_answer = "";
                     }
@@ -410,7 +411,7 @@ class ApiController extends Controller
                     if ($bookmark == 1) {
 
                         $ques->bookmark_status = true;
-                        $ques->user_answer=0;
+                        $ques->user_answer = 0;
                     } else {
 
                         $ques->bookmark_status = false;
@@ -437,7 +438,7 @@ class ApiController extends Controller
 
             $current_time = Carbon::now("Asia/Karachi")->format('H:i:m');
             $end_time = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->value('end_time');
-         
+
             if ($end_time >= $current_time && $date == $quiz->created_at->format('Y-m-d')) {
 
                 $user = User::find($request->user_id);
@@ -474,12 +475,11 @@ class ApiController extends Controller
                     $bookmark = Bookmark::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques_id)->count();
 
                     $user_answer = Answer::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->where('question_id', $ques_id)->first();
-                  
+
                     if ($user_answer) {
 
                         $ques->user_answer = $user_answer->user_ans;
-
-                    }else{
+                    } else {
 
                         $ques->user_answer = "";
                     }
@@ -488,13 +488,12 @@ class ApiController extends Controller
                     if ($bookmark == 1) {
 
                         $ques->bookmark_status = true;
-                        $ques->user_answer=0;
+                        $ques->user_answer = 0;
                     } else {
 
                         $ques->bookmark_status = false;
                     }
                     array_push($question_list, $ques);
-
                 }
                 $query = Quiz::where('user_id', $request->user_id)->where('exercise_id', $request->exe_id)->value('id');
                 $quiz = Quiz::find($query);
@@ -514,7 +513,6 @@ class ApiController extends Controller
                 $res['data']['Total_Questions'] = $total_questions;
                 $res['data']['questions'] = $questions;
                 return response()->json($res);
-
             } else if ($end_time < $current_time || $date != $quiz->created_at->format('Y-m-d')) {
 
                 $questions = Question::where('exercise_id', $request->exe_id)->get();
@@ -624,16 +622,50 @@ class ApiController extends Controller
                     } else {
                         $percentage;
                     }
-                    $res['status'] = True;
-                    $res['message'] = "You Have Solved Exercise Completely!";
-                    $res['data']['Total_Marks'] = $total_marks;
-                    $res['data']['Total_Questions'] = $total_questions;
-                    $res['data']['Un_Attempt_Questions'] = $unans;
-                    $res['data']['Correct_Answers'] = $right_ans;
-                    $res['data']['Wrong_Answers'] = $wrong_ans;
-                    $res['data']['total_score'] = $score_right_ans - $wrong_ans;
-                    $res['data']['Percentage'] = $percentage . "%";
-                    return response()->json($res);
+
+                    $result = Result::where('user_id', $request->user_id)->where('exercise_id',  $request->exe_id)->get();
+                    if (count($result) > 0) {
+
+                        $res['status'] = true;
+                        $res['message'] = "Result Already Exists";
+                        $res['data']['Total_Marks'] = $total_marks;
+                        $res['data']['Total_Questions'] = $total_questions;
+                        $res['data']['Un_Attempt_Questions'] = $unans;
+                        $res['data']['Correct_Answers'] = $right_ans;
+                        $res['data']['Wrong_Answers'] = $wrong_ans;
+                        $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+                        $res['data']['Percentage'] = $percentage . "%";
+                        return response()->json($res);
+                        
+                    } else {
+
+
+                        $exe = Exercise::find($request->exe_id)->first();
+
+                        $result = new Result();
+                        $result->user_id = $request->user_id;
+                        $result->cat_id = $exe->categoury_id;
+                        $result->exercise_id = $request->exe_id;
+                        $result->total_marks =  $total_marks;
+                        $result->right_ans =   $right_ans;
+                        $result->wrong_ans = $wrong_ans;
+                        $result->un_ans = $unans;
+                        $result->user_score = $marks;
+                        $result->percentage =  $percentage;
+                        $result->save();
+
+
+                        $res['status'] = true;
+                        $res['message'] = "Final Result!!";
+                        $res['data']['Total_Marks'] = $total_marks;
+                        $res['data']['Total_Questions'] = $total_questions;
+                        $res['data']['Un_Attempt_Questions'] = $unans;
+                        $res['data']['Correct_Answers'] = $right_ans;
+                        $res['data']['Wrong_Answers'] = $wrong_ans;
+                        $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+                        $res['data']['Percentage'] = $percentage . "%";
+                        return response()->json($res);
+                    }
                 } else {
 
                     if (count($answer) == 0) {
@@ -703,16 +735,49 @@ class ApiController extends Controller
                 } else {
                     $percentage;
                 }
-                $res['status'] = true;
-                $res['message'] = "Time Up!";
-                $res['data']['Total_Marks'] = $total_marks;
-                $res['data']['Total_Questions'] = $total_questions;
-                $res['data']['Un_Attempt_Questions'] = $unans;
-                $res['data']['Correct_Answers'] = $right_ans;
-                $res['data']['Wrong_Answers'] = $wrong_ans;
-                $res['data']['total_score'] = $score_right_ans - $wrong_ans;
-                $res['data']['Percentage'] = $percentage . "%";
-                return response()->json($res);
+
+                $result = Result::where('user_id', $request->user_id)->where('exercise_id',  $request->exe_id)->get();
+                if (count($result) > 0) {
+
+                    $res['status'] = true;
+                    $res['message'] = "Result Already Exists";
+                    $res['data']['Total_Marks'] = $total_marks;
+                    $res['data']['Total_Questions'] = $total_questions;
+                    $res['data']['Un_Attempt_Questions'] = $unans;
+                    $res['data']['Correct_Answers'] = $right_ans;
+                    $res['data']['Wrong_Answers'] = $wrong_ans;
+                    $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+                    $res['data']['Percentage'] = $percentage . "%";
+                    return response()->json($res);
+                } else {
+
+
+                    $exe = Exercise::find($request->exe_id)->first();
+
+                    $result = new Result();
+                    $result->user_id = $request->user_id;
+                    $result->cat_id = $exe->categoury_id;
+                    $result->exercise_id = $request->exe_id;
+                    $result->total_marks =  $total_marks;
+                    $result->right_ans =   $right_ans;
+                    $result->wrong_ans = $wrong_ans;
+                    $result->un_ans = $unans;
+                    $result->user_score = $marks;
+                    $result->percentage =  $percentage;
+                    $result->save();
+
+
+                    $res['status'] = true;
+                    $res['message'] = "Final Result!!";
+                    $res['data']['Total_Marks'] = $total_marks;
+                    $res['data']['Total_Questions'] = $total_questions;
+                    $res['data']['Un_Attempt_Questions'] = $unans;
+                    $res['data']['Correct_Answers'] = $right_ans;
+                    $res['data']['Wrong_Answers'] = $wrong_ans;
+                    $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+                    $res['data']['Percentage'] = $percentage . "%";
+                    return response()->json($res);
+                }
             }
         } else {
 
@@ -747,11 +812,15 @@ class ApiController extends Controller
             return response()->json($res);
         }
         $quiz = Quiz::where('user_id',  $request->user_id)->where('exercise_id', $request->exe_id)->first();
-        if($quiz){
+        if ($quiz) {
 
             $quiz->status = 1;
+            $quiz->save();
+        } else {
+            $res['status'] = false;
+            $res['message'] = "Quiz Start First!";
+            return response()->json($res);
         }
-        $quiz->save();
 
         $questions = Question::where('exercise_id', $request->exe_id)->get();
         $total_questions = Question::where('exercise_id', $request->exe_id)->count();
@@ -792,18 +861,58 @@ class ApiController extends Controller
         } else {
             $percentage;
         }
-      
 
-        $res['status'] = true;
-        $res['message'] = "Final Result!!";
-        $res['data']['Total_Marks'] = $total_marks;
-        $res['data']['Total_Questions'] = $total_questions;
-        $res['data']['Un_Attempt_Questions'] = $unans;
-        $res['data']['Correct_Answers'] = $right_ans;
-        $res['data']['Wrong_Answers'] = $wrong_ans;
-        $res['data']['total_score'] = $score_right_ans - $wrong_ans;
-        $res['data']['Percentage'] = $percentage . "%";
-        return response()->json($res);
+        $exe = Exercise::find($request->exe_id);
+        $total_users =  Result::where('cat_id', $exe->id)->where('exercise_id',  $request->exe_id)->count();
+        $users_results =  Result::select('user_score')->where('cat_id', $exe->id)->where('exercise_id',  $request->exe_id)->get();
+        $array = collect($users_results)->sortBy('user_score')->reverse()->toArray();
+
+
+        $result = Result::where('user_id', $request->user_id)->where('exercise_id',  $request->exe_id)->get();
+        if (count($result) > 0) {
+
+            $res['status'] = true;
+            $res['message'] = "Result Already Exists";
+            $res['data']['Total_Marks'] = $total_marks;
+            $res['data']['Total_Questions'] = $total_questions;
+            $res['data']['Un_Attempt_Questions'] = $unans;
+            $res['data']['Correct_Answers'] = $right_ans;
+            $res['data']['Wrong_Answers'] = $wrong_ans;
+            $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+            $res['data']['Percentage'] = $percentage . "%";
+            $res['data']['uiyie'] = $total_users;
+            $res['data']['gdg'] = $array;
+
+            return response()->json($res);
+        } else {
+
+
+            $exe = Exercise::find($request->exe_id)->first();
+
+            $result = new Result();
+            $result->user_id = $request->user_id;
+            $result->cat_id = $exe->categoury_id;
+            $result->exercise_id = $request->exe_id;
+            $result->total_marks =  $total_marks;
+            $result->right_ans =   $right_ans;
+            $result->wrong_ans = $wrong_ans;
+            $result->un_ans = $unans;
+            $result->user_score = $marks;
+            $result->percentage =  $percentage;
+            $result->save();
+
+
+            $res['status'] = true;
+            $res['message'] = "Final Result!!";
+            $res['data']['Total_Marks'] = $total_marks;
+            $res['data']['Total_Questions'] = $total_questions;
+            $res['data']['Un_Attempt_Questions'] = $unans;
+            $res['data']['Correct_Answers'] = $right_ans;
+            $res['data']['Wrong_Answers'] = $wrong_ans;
+            $res['data']['total_score'] = $score_right_ans - $wrong_ans;
+            $res['data']['Percentage'] = $percentage . "%";
+            return response()->json($res);
+        }
     }
     //====================================Pending Quiz By User Api ===================================
     public function pending(Request $request)
@@ -831,22 +940,19 @@ class ApiController extends Controller
                 if ($current_time <= $que->end_time && $date == $que->created_at->format('Y-m-d')) {
 
                     $que->time_remaining  = \Carbon\Carbon::parse($que->end_time)->diffInMinutes(\Carbon\Carbon::parse($current_time));
-                 
                 } else {
 
                     $que->time_remaining  = 0;
-                    
-                }   
+                }
                 array_push($pending_list, $que);
 
                 $exe = Exercise::where('id', $que->exercise_id)->first();
 
-                if($exe){
-                    
+                if ($exe) {
+
                     $que->category_id = $exe->categoury_id;
                 }
                 array_push($cat_id, $que);
-
             }
             if ($pending_list) {
 
@@ -857,9 +963,8 @@ class ApiController extends Controller
                 $res['message'] = "Pending Quiz List Against User!!";
                 $res['data'] = $pending_list;
                 return response()->json($res);
-
             } else {
-           
+
                 $res['status'] = false;
                 $res['message'] = "No Quiz Available!!";
                 return response()->json($res);
@@ -942,6 +1047,121 @@ class ApiController extends Controller
             return response()->json($res);
         }
     }
+
+    //=============================== otp check User Api =============================
+
+    public function otp_check(Request $request)
+    {
+
+        $users = User::where('phone', $request->phone)->first();
+        if ($users) {
+            $res['status'] = true;
+            $res['message'] = "users";
+            $res['User Data'] = $users;
+            return response()->json($res);
+        } else {
+            $res['status'] = false;
+            $res['message'] = "User does not exist";
+            return response()->json($res);
+        }
+    }
+
+    //=============================== otp login User Api ===========================
+
+    public function otp_login(Request $request)
+    {
+
+
+        $user = User::where('phone',  $request->phone)->get();
+
+        if (count($user) == 0) {
+
+            $user_email = User::where('email',  $request->email)->get();
+
+            if (count($user_email) == 1) {
+                $res['status'] = false;
+                $res['message'] = "Email Already exists";
+                return response()->json($res);
+            } else {
+
+                $users = new User();
+                $users->name = $request->name;
+                $users->email = $request->email;
+                $users->phone = $request->phone;
+                $users->password =  Hash::make($request->phone);
+                $users->save();
+
+                $userss = User::where('phone',  $request->phone)->first();
+
+                $res['status'] = true;
+                $res['message'] = "user";
+                $res['User Data'] = $userss;
+                return response()->json($res);
+            }
+        } else {
+            $res['status'] = false;
+            $res['message'] = "User Already exists";
+            return response()->json($res);
+        }
+    }
+
+    //=============================== gmail check User Api =============================
+
+    public function email_check(Request $request)
+    {
+
+        $users = User::where('user_id', $request->user_id)->first();
+        if ($users) {
+            $res['status'] = true;
+            $res['message'] = "users";
+            $res['User Data'] = $users;
+            return response()->json($res);
+        } else {
+            $res['status'] = false;
+            $res['message'] = "User does not exist";
+            return response()->json($res);
+        }
+    }
+
+    //=============================== email login User Api ===========================
+
+    public function email_login(Request $request)
+    {
+
+
+        $user = User::where('user_id',  $request->user_id)->get();
+
+        if (count($user) == 0) {
+
+            $user_email = User::where('email',  $request->email)->get();
+
+            if (count($user_email) == 1) {
+                $res['status'] = false;
+                $res['message'] = "Email Already exists";
+                return response()->json($res);
+            } else {
+
+                $users = new User();
+                $users->name = $request->name;
+                $users->email = $request->email;
+                $users->user_id = $request->user_id;
+                $users->password =  Hash::make($request->email);
+                $users->save();
+
+                $userss = User::where('user_id',  $request->user_id)->get();
+
+                $res['status'] = true;
+                $res['message'] = "user";
+                $res['User Data'] = $userss;
+                return response()->json($res);
+            }
+        } else {
+            $res['status'] = false;
+            $res['message'] = "User Already exists";
+            return response()->json($res);
+        }
+    }
+
     //=============================== User Logout Api ==========================
     public function logout()
     {
@@ -1150,7 +1370,8 @@ class ApiController extends Controller
         }
     }
 
-    public function search_category(Request $request){
+    public function search_category(Request $request)
+    {
 
         $result = Categoury::where('name', 'LIKE', "%{$request->cat_name}%")->get();
 
@@ -1166,10 +1387,11 @@ class ApiController extends Controller
         }
     }
 
-    public function search_exercise(Request $request){
+    public function search_exercise(Request $request)
+    {
 
         $result = Exercise::where('exercise_name', 'LIKE', "%{$request->exe_name}%")->get();
-        
+
         if (count($result) == 0) {
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
@@ -1182,10 +1404,11 @@ class ApiController extends Controller
         }
     }
 
-    public function search_blog(Request $request){
+    public function search_blog(Request $request)
+    {
 
         $result = blog_category::where('blog_name', 'LIKE', "%{$request->blog_name}%")->get();
-        
+
         if (count($result) == 0) {
             $res['status'] = false;
             $res['message'] = "Record Not Found!";
@@ -1198,10 +1421,11 @@ class ApiController extends Controller
         }
     }
 
-    public function search_blog_title(Request $request){
+    public function search_blog_title(Request $request)
+    {
 
         $result = Blog::where('post_title', 'LIKE', "%{$request->post_title}%")->get();
-        
+
         if (count($result) == 0) {
             $res['status'] = false;
             $res['message'] = "Record Not Found!";

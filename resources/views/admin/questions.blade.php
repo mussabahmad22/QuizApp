@@ -42,10 +42,11 @@
             </div>
             @endif
             <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal">Add
-                    Question</button>
+                <a href="{{route('show_add_question',['id' => $exe->id])}}"><button type="button" class="btn btn-dark">Add
+                        Question</button></a>
             </div>
             <br>
+         
             <div class="#">
                 <table class="table table-bordered table-responsive" id="questiontbl">
                     <thead>
@@ -84,11 +85,14 @@
                             <td>
                                 <?= $que->right_ans_statement ?>
                             </td>
-                            <td>
+                            <td width="50">
                                 <?= $que->question_review ?>
                             </td>
                             <td>{{ $que->yt_link }}</td>
-                            <td><button type="button" value="{{$que->id}}" class="btn btn-dark editbtn">Edit</button>
+                            <td>
+                                <!-- <button type="button" value="{{$que->id}}" class="btn btn-dark editbtn">Edit</button> -->
+                                <a href="{{route('edit_question_page',['id' => $que->id])}}"><button type="button"
+                                    class="btn btn-dark editbtn">Edit</button></a>
                                 <!-- Button trigger modal -->
                                 <button type="button" value="{{$que->id}}"
                                     class="btn btn-danger deletebtn">Delete</button>
@@ -130,350 +134,19 @@
                     </div>
                 </div>
             </div>
-
-            <!-- ================ ADD Question Modal============================ -->
-            <div class="modal fade " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg" style="width:100%;" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add Questions</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form type="submit" action="{{route('add_questions',['id' => $exe->id])}}" method="post">
-                                @csrf
-                                <div class="intro-y col-span-12 lg:col-span-8 p-5">
-                                    <div class="grid grid-cols-12 gap-4 row-gap-5">
-                                        <input type="hidden" name="id" value="{{$exe->id}}"></input>
-                                        <div class="mb-3">
-                                            <label class="form-label">Questions Title*</label>
-                                            <input type="text" class="form-control" name="question_title">
-                                            <span class="text-danger">
-                                                @error('question_title')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Option 1*</strong></label>
-                                            <textarea class="summernote" name="option1"></textarea>
-                                            <span class="text-danger">
-                                                @error('option1')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Statement 1*</strong></label>
-                                            <textarea class="summernote" name="statement1"></textarea>
-                                            <span class="text-danger">
-                                                @error('statement1')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Option 2*</strong></label>
-                                            <textarea class="summernote" name="option2"></textarea>
-                                            <span class="text-danger">
-                                                @error('option2')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Statement 2*</strong></label>
-                                            <textarea class="summernote" name="statement2"></textarea>
-                                            <span class="text-danger">
-                                                @error('statement2')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Option 3*</strong></label>
-                                            <textarea class="summernote" name="option3"></textarea>
-                                            <span class="text-danger">
-                                                @error('option3')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Statement 3*</strong></label>
-                                            <textarea class="summernote" name="statement3"></textarea>
-                                            <span class="text-danger">
-                                                @error('statement3')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Option 4*</strong></label>
-                                            <textarea class="summernote" name="option4"></textarea>
-                                            <span class="text-danger">
-                                                @error('option4')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Statement 4*</strong></label>
-                                            <textarea class="summernote" name="statement4"></textarea>
-                                            <span class="text-danger">
-                                                @error('statement4')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Right Option*</label>
-                                            <select class="form-control form-select-lg mb-3" name="options"
-                                                aria-label=".form-select-lg example">
-                                                <option value="">Select Right Option</option>
-                                                <option value="1">Option 1</option>
-                                                <option value="2">Option 2</option>
-                                                <option value="3">Option 3</option>
-                                                <option value="4">Option 4</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Right Answer Statement*</strong></label>
-                                            <textarea class="summernote" name="right_answer_statement"></textarea>
-                                            <span class="text-danger">
-                                                @error('right_answer_statement')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Question Review*</strong></label>
-                                            <textarea class="summernote" name="question_review"></textarea>
-                                            <span class="text-danger">
-                                                @error('question_review')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Youtube Link*</label>
-                                            <input type="text" class="form-control" name="link"
-                                                placeholder="example@example.com">
-                                                <span class="text-danger">
-                                                    @error('link')
-                                                    {{$message}}
-                                                    @enderror
-                                                </span>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-dark">Save</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!-- ======================== END ADD Question Modal==================================== -->
-
-            <!-- ======================== Update Question Modal==================================== -->
-            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe3"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg" style="width:100%;" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabe3">Update Question</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form type="submit" action="{{route('question_update')}}" method="post">
-                                @csrf
-                                @method('PUT')
-                                <div class="intro-y col-span-12 lg:col-span-8 p-5">
-                                    <div class="grid grid-cols-12 gap-4 row-gap-5">
-                                        <input type="hidden" name="query_id" id="query_id"></input>
-                                        <div class="mb-3">
-                                            <label class="form-label">Questions Title*</label>
-                                            <input type="text" class="form-control" name="question_title"
-                                                id="question_title">
-                                                <span class="text-danger">
-                                                    @error('question_title')
-                                                    {{$message}}
-                                                    @enderror
-                                                </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Option 1*</strong></label>
-                                            <textarea class="summernote" name="option1" id="option1"></textarea>
-                                            <span class="text-danger">
-                                                @error('option1')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Statement 1*</strong></label>
-                                            <textarea class="summernote" name="statement1" id="statement1"></textarea>
-                                            <span class="text-danger">
-                                                @error('statement1')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Option 2*</strong></label>
-                                            <textarea class="summernote" name="option2" id="option2"></textarea>
-                                            <span class="text-danger">
-                                                @error('option2')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Statement 2*</strong></label>
-                                            <textarea class="summernote" name="statement2" id="statement2"></textarea>
-                                            <span class="text-danger">
-                                                @error('statement2')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Option 3*</strong></label>
-                                            <textarea class="summernote" name="option3" id="option3"></textarea>
-                                            <span class="text-danger">
-                                                @error('option3')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Statement 3*</strong></label>
-                                            <textarea class="summernote" name="statement3" id="statement3"></textarea>
-                                            <span class="text-danger">
-                                                @error('statement3')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Option 4*</strong></label>
-                                            <textarea class="summernote" name="option4" id="option4"></textarea>
-                                            <span class="text-danger">
-                                                @error('option4')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Statement 4*</strong></label>
-                                            <textarea class="summernote" name="statement4" id="statement4"></textarea>
-                                            <span class="text-danger">
-                                                @error('statement4')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="mb-3 form-group">
-                                            <label class="form-label">Right Option*</label>
-                                            <select class="form-control form-select-lg mb-3" name="options"
-                                            id="options" aria-label=".form-select-lg example">
-                                                <option value="">Select Right Option</option>
-                                                <option value="1">Option 1</option>
-                                                <option value="2">Option 2</option>
-                                                <option value="3">Option 3</option>
-                                                <option value="4">Option 4</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Right Answer Statement*</strong></label>
-                                            <textarea class="summernote" name="right_answer_statement" id="right_answer_statement"></textarea>
-                                            <span class="text-danger">
-                                                @error('right_answer_statement')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Question Review*</strong></label>
-                                            <textarea class="summernote"  id="question_review" name="question_review"></textarea>
-                                            <span class="text-danger">
-                                                @error('question_review')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Youtube Link*</label>
-                                            <input type="text" class="form-control" name="link" id="link">
-                                            <span class="text-danger">
-                                                @error('link')
-                                                {{$message}}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-dark">Update</button>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!-- ======================== End Update Question Modal==================================== -->
         </div>
     </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-
-        //========================Script For Edit Question======================================
-        $(document).on('click', '.editbtn', function () {
-            var query_id = $(this).val();
-            $('#editModal').modal('show');
-
-            $.ajax({
-                type: "GET",
-                url: "/edit_question/" + query_id,
-                success: function (response) {
-                    console.log(response);
-                    $('#query_id').val(query_id);
-                    $('#question_title').val(response.question.question_title);
-                    $('#options').val(response.question.right_ans);
-                    $('#link').val(response.question.yt_link);
-                    $('#option1').summernote('code', response.question.option_1);
-                    $('#statement1').summernote('code', response.question.statement_1);
-                    $('#option2').summernote('code', response.question.option_2);
-                    $('#statement2').summernote('code', response.question.statement_2);
-                    $('#option3').summernote('code', response.question.option_3);
-                    $('#statement3').summernote('code', response.question.statement_3);
-                    $('#option4').summernote('code', response.question.option_4);
-                    $('#statement4').summernote('code', response.question.statement_4);
-                    $('#right_answer_statement').summernote('code', response.question.right_ans_statement);
-                    $('#question_review').summernote('code', response.question.question_review);
-
-                }
-            });
-
-        });
-    });
+  
     //==========================Script For Delete Question======================================
     $(document).on('click', '.deletebtn', function () {
         var query_id = $(this).val();
         $('#deleteModal').modal('show');
         $('#deleting_id').val(query_id);
     });
+
 </script>
 
 <script type="text/javascript">

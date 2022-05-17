@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 use App\Models\Admin;
+use App\Models\Answer;
 use App\Models\Categoury;
 use App\Models\Exercise;
 use App\Models\Question;
 use App\Models\User;
 use App\Models\Blog;
 use App\Models\blog_category;
+use App\Models\Bookmark;
 use App\Models\Post;
+use App\Models\Quiz;
 use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Result;
 
 
 use Illuminate\Http\Request;
@@ -56,6 +60,14 @@ class AdminController extends Controller
     public function delete_user(Request $request){
 
         $user_id = $request->delete_user_id;
+        $del_ans = Answer::where('user_id',  $user_id);
+        $del_ans->delete();
+        $del_bookmark = Bookmark::where('user_id', $user_id);
+        $del_bookmark->delete();
+        $del_quiz = Quiz::where('user_id', $user_id);
+        $del_quiz->delete();
+        $del_result = Result::where('user_id',  $user_id);
+        $del_result->delete();
         $users = User::findOrFail($user_id);
         $users->delete();
         return redirect(route('users'))->with('error', 'User Deleted successfully');
@@ -137,6 +149,16 @@ class AdminController extends Controller
     public function categoury_delete(Request $request){
         
         $categoury_id = $request->delete_categoury_id;
+
+        $del_bookmark = Bookmark::where('cat_id', $categoury_id);
+        $del_bookmark->delete();
+        $del_exe = Exercise::where('categoury_id', $categoury_id)->first();
+        $del_ques = Question::where('exercise_id', $del_exe->id);
+        $del_ques->delete();
+        $del_ques = Result::where('cat_id', $categoury_id);
+        $del_ques->delete();
+        $del_exe->delete();
+        
         $categoury = Categoury::findOrFail($categoury_id);
         $categoury->delete();
         return redirect()->back()->with('error', 'Categoury Deleted successfully');
@@ -192,7 +214,12 @@ class AdminController extends Controller
 
     public function exercise_delete(Request $request){
         
+       
         $query_id = $request->delete_exercise_id;
+        $del_ques = Question::where('exercise_id', $query_id);
+        $del_ques->delete();
+        $del_result = Result::where('exercise_id', $query_id);
+        $del_result->delete();
         $exercise = Exercise::findOrFail($query_id);
         $exercise->delete();
         return redirect()->back()->with('error', 'Exercise Deleted successfully');
@@ -209,8 +236,34 @@ class AdminController extends Controller
 
     }
 
+    public function show_add_question($id){
+
+        $exe = Exercise::find($id);
+        $url = url('add_questions') . "/" . $id;
+        $title = 'ADD NEW QUESTION';
+        $text = 'Save';
+        return view('admin.add_questions',compact('exe','url','title','text'));
+
+    }
+
     public function add_questions($id, Request $request){
 
+        //dd($request);
+
+        if ($request->file('file_title') == null) {
+            $path_title = "";
+        }else{
+            $path_title = $request->file('file_title')->store('public/images');  
+        }
+
+        if ($request->file('file_reveiw') == null) {
+            $path_review = "";
+        }else{
+            $path_review = $request->file('file_reveiw')->store('public/images');
+        }
+
+        // $path_title = $request->file('file_title')->store('public/images');
+        // $path_review = $request->file('file_review')->store('public/images');
 
         $request->validate([
             'question_title' => 'required',
@@ -230,6 +283,7 @@ class AdminController extends Controller
         $questions = new Question();
         $questions->exercise_id =  $request->id;
         $questions->question_title = $request->question_title;
+        $questions->path_title = $path_title;
         $questions->option_1 = $request->option1;
         $questions->statement_1 = $request->statement1;
         $questions->option_2 = $request->option2;
@@ -241,28 +295,47 @@ class AdminController extends Controller
         $questions->right_ans = $request->options;
         $questions->right_ans_statement = $request->right_answer_statement;
         $questions->question_review = $request->question_review;
+        $questions->path_review = $path_review;
         $questions->yt_link = $request->link;
         $questions->save();
         return redirect(route('questions',$id))->with('success', 'Question Added successfully');
         
     }
 
-    public function edit_questions($id){
+    public function edit_question_page($id){
 
-        $question = Question::findOrFail($id);
-        return response()->json([
-            'status' => '200',
-            'question' => $question,
-        ]);
+        $ques = Question::find($id);
+        $exe = Exercise::find($ques->exercise_id);
+        $url = url('question_update') ."/". $id;
+        $title = 'EDIT QUESTION';
+        $text = 'Update';
+        return view('admin.add_questions',compact('exe','ques','url','title','text'));
 
     }
 
-    public function question_update(Request $request){
+    public function question_update($id ,Request $request){
 
-        $query_id = $request->query_id;
 
-        $question = Question::findOrFail($query_id);
+        // $path_title = $request->file('file_title')->store('public/images');
+        // $path_review = $request->file('file_review')->store('public/images');
+
+        $question = Question::findOrFail($id);
+
+        if ($request->file('file_title') == null) {
+            $path_title = $question->path_title;
+        }else{
+            $path_title = $request->file('file_title')->store('public/images');  
+        }
+
+        if ($request->file('file_reveiw') == null) {
+            $path_review = $question->path_review;
+        }else{
+            $path_review = $request->file('file_reveiw')->store('public/images');
+        }
+        
+        $question->exercise_id = $request->id;
         $question->question_title = $request->question_title;
+        $question->path_title = $path_title;
         $question->option_1 = $request->option1;
         $question->statement_1 = $request->statement1;
         $question->option_2 = $request->option2;
@@ -274,9 +347,10 @@ class AdminController extends Controller
         $question->right_ans = $request->options;
         $question->right_ans_statement = $request->right_answer_statement;
         $question->question_review = $request->question_review;
+        $question->path_review = $path_review;
         $question->yt_link = $request->link;
         $question->save();
-        return redirect()->back()->with('success', 'Question Updated successfully');
+        return redirect(route('questions', $question->exercise_id))->with('success', 'Question Updated successfully');  
 
     }
 
@@ -331,6 +405,8 @@ class AdminController extends Controller
     public function blog_delete(Request $request){
         
         $blog_id = $request->delete_blog_id;
+        $del_blog = Blog::where('cat_id',  $blog_id );
+        $del_blog->delete();
         $categoury = blog_category::findOrFail($blog_id);
         $categoury->delete();
         return redirect()->back()->with('error', 'Blog Deleted successfully');

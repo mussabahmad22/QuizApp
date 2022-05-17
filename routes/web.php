@@ -58,14 +58,16 @@ Route::middleware('auth','admin')->group(function () {
     //===============================Exercise Routes=============================================
     Route::get('/exercise/{id}' , [AdminController::class, 'exercise'])->name('exercise');
     Route::post('/add_exercise/{id}' , [AdminController::class, 'add_exercise'])->name('add_exercise');
-    Route::get('/edit_exercise/{id}' , [AdminController::class, 'edit_exercise'])->name('edit_exercise');
+    Route::get('exercise/edit_exercise/{id}' , [AdminController::class, 'edit_exercise'])->name('edit_exercise');
     Route::PUT('/exercise_update' , [AdminController::class, 'exercise_update'])->name('exercise_update');
     Route::delete('/exercise_delete' , [AdminController::class, 'exercise_delete'])->name('exercise_delete');
     //===============================Questions Routes=============================================
+    Route::get('/show_add_question/{id}' , [AdminController::class, 'show_add_question'])->name('show_add_question');
     Route::get('/questions/{id}' , [AdminController::class, 'questions'])->name('questions');
     Route::post('/add_questions/{id}' , [AdminController::class, 'add_questions'])->name('add_questions');
-    Route::get('/edit_question/{id}' , [AdminController::class, 'edit_questions'])->name('edit_questions');
-    Route::PUT('/question_update' , [AdminController::class, 'question_update'])->name('question_update');
+    Route::post('save_image', [AdminController::class, 'save']);
+    Route::get('/edit_question_page/{id}' , [AdminController::class, 'edit_question_page'])->name('edit_question_page');
+    Route::post('/question_update/{id}' , [AdminController::class, 'question_update'])->name('question_update');
     Route::delete('/question_delete' , [AdminController::class, 'question_delete'])->name('question_delete');
     //===============================Blog Routes=============================================
     Route::get('/blog' , [AdminController::class, 'blog'])->name('blog');

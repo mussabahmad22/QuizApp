@@ -150,7 +150,7 @@
 
             $.ajax({
                 type: "GET",
-                url: "/edit_blog/" + blog_id,
+                url: "edit_blog/" + blog_id,
                 success: function (response) {
                     console.log(response);
                     $('#blog_id').val(blog_id);

@@ -230,7 +230,7 @@
 
             $.ajax({
                 type: "GET",
-                url: "/edit_exercise/" + query_id,
+                url: "edit_exercise/" + query_id,
                 success: function (response) {
                     console.log(response);
                     $('#query_id').val(query_id);

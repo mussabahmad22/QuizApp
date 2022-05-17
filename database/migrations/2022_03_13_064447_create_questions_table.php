@@ -16,7 +16,8 @@ class CreateQuestionsTable extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('exercise_id')->constrained('exercises')->nullable()->default(NULL);
-            $table->string('question_title');
+            $table->longText('question_title');
+            $table->string('path_title')->default("");
             $table->longText('option_1');
             $table->longText('statement_1');
             $table->longText('option_2');
@@ -28,6 +29,7 @@ class CreateQuestionsTable extends Migration
             $table->string('right_ans');
             $table->longText('right_ans_statement');
             $table->longText('question_review');
+            $table->string('path_review')->default("");
             $table->string('yt_link');
             $table->timestamps();
         });

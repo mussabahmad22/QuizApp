@@ -60,6 +60,11 @@ Route::get('/pending' , [ApiController::class, 'pending']);
 
 //=============================== User Login ==========================
 Route::post('/login',  [ApiController::class, 'login']);
+Route::post('/otp_check',  [ApiController::class, 'otp_check']);
+Route::post('/otp_login',  [ApiController::class, 'otp_login']);
+Route::post('/email_check',  [ApiController::class, 'email_check']);
+Route::post('/email_login',  [ApiController::class, 'email_login']);
+
 //=============================== User Logout ==========================
 Route::get('/logout',  [ApiController::class, 'logout']);
 
