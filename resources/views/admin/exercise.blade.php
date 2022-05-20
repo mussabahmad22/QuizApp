@@ -194,7 +194,7 @@
                                             <label class="form-label">Time Duration :</label>
                                             <select class="form-select" name="time_duration" id="time_duration"
                                                 aria-label="Default select example">
-                                                <option selected>Select Quiz Time</option>
+                                                <option value="">Select Quiz Time</option>
                                                 <option value="30">30 minutes</option>
                                                 <option value="60">1 Hour</option>
                                                 <option value="90">1.5 Hour</option>

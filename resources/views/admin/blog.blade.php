@@ -125,6 +125,11 @@
                                 <div class="mb-3">
                                     <label class="form-label">Category Name</label>
                                     <input type="text" class="form-control" name="blog_name" id="blog_name">
+                                    <span class="text-danger">
+                                        @error('blog_name')
+                                        {{$message}}
+                                            @enderror
+                                    </span>
                                 </div>
                             </div>
                         </div>

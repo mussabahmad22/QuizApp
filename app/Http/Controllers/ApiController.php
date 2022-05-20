@@ -623,11 +623,30 @@ class ApiController extends Controller
                         $percentage;
                     }
 
+                    //--------------------------------percntile_find-----------------------------------------------
+                    $exe = Exercise::find($request->exe_id);
+                    $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
+                    $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
+                    $index = 0;
+                    $user_index = 0;
+                    foreach ($users_results as $results) {
+
+                        if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
+
+                            $user_index = $index;
+                        }
+                        $index++;
+                    }
+
+                    $pos = $total_users - $user_index;
+
+                    $percentile = $pos /  $total_users * 100;
+
                     $result = Result::where('user_id', $request->user_id)->where('exercise_id',  $request->exe_id)->get();
                     if (count($result) > 0) {
 
                         $res['status'] = true;
-                        $res['message'] = "Result Already Exists";
+                        $res['message'] = "Result Already  Exists";
                         $res['data']['Total_Marks'] = $total_marks;
                         $res['data']['Total_Questions'] = $total_questions;
                         $res['data']['Un_Attempt_Questions'] = $unans;
@@ -635,8 +654,9 @@ class ApiController extends Controller
                         $res['data']['Wrong_Answers'] = $wrong_ans;
                         $res['data']['total_score'] = $score_right_ans - $wrong_ans;
                         $res['data']['Percentage'] = $percentage . "%";
+                        $res['data']['Percentile'] = $percentile . "%";
+                        $res['data']['Total_users_in_test_Appeared'] = $total_users;
                         return response()->json($res);
-                        
                     } else {
 
 
@@ -654,6 +674,25 @@ class ApiController extends Controller
                         $result->percentage =  $percentage;
                         $result->save();
 
+                        //--------------------------------percntile_find-----------------------------------------------
+                        $exe = Exercise::find($request->exe_id);
+                        $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
+                        $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
+                        $index = 0;
+                        $user_index = 0;
+                        foreach ($users_results as $results) {
+
+                            if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
+
+                                $user_index = $index;
+                            }
+                            $index++;
+                        }
+
+                        $pos = $total_users - $user_index;
+
+                        $percentile = $pos /  $total_users * 100;
+
 
                         $res['status'] = true;
                         $res['message'] = "Final Result!!";
@@ -664,6 +703,8 @@ class ApiController extends Controller
                         $res['data']['Wrong_Answers'] = $wrong_ans;
                         $res['data']['total_score'] = $score_right_ans - $wrong_ans;
                         $res['data']['Percentage'] = $percentage . "%";
+                        $res['data']['Percentile'] = $percentile . "%";
+                        $res['data']['Total_users_in_test_Appeared'] = $total_users;
                         return response()->json($res);
                     }
                 } else {
@@ -736,11 +777,30 @@ class ApiController extends Controller
                     $percentage;
                 }
 
+                //--------------------------------percntile_find-----------------------------------------------
+                $exe = Exercise::find($request->exe_id);
+                $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
+                $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
+                $index = 0;
+                $user_index = 0;
+                foreach ($users_results as $results) {
+
+                    if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
+
+                        $user_index = $index;
+                    }
+                    $index++;
+                }
+
+                $pos = $total_users - $user_index;
+
+                $percentile = $pos /  $total_users * 100;
+
                 $result = Result::where('user_id', $request->user_id)->where('exercise_id',  $request->exe_id)->get();
                 if (count($result) > 0) {
 
                     $res['status'] = true;
-                    $res['message'] = "Result Already Exists";
+                    $res['message'] = "Time Up See Results!!";
                     $res['data']['Total_Marks'] = $total_marks;
                     $res['data']['Total_Questions'] = $total_questions;
                     $res['data']['Un_Attempt_Questions'] = $unans;
@@ -748,6 +808,8 @@ class ApiController extends Controller
                     $res['data']['Wrong_Answers'] = $wrong_ans;
                     $res['data']['total_score'] = $score_right_ans - $wrong_ans;
                     $res['data']['Percentage'] = $percentage . "%";
+                    $res['data']['Percentile'] = $percentile . "%";
+                    $res['data']['Total_users_in_test_Appeared'] = $total_users;
                     return response()->json($res);
                 } else {
 
@@ -766,6 +828,26 @@ class ApiController extends Controller
                     $result->percentage =  $percentage;
                     $result->save();
 
+                    //--------------------------------percntile_find-----------------------------------------------
+                    $exe = Exercise::find($request->exe_id);
+                    $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
+                    $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
+                    $index = 0;
+                    $user_index = 0;
+                    foreach ($users_results as $results) {
+
+                        if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
+
+                            $user_index = $index;
+                        }
+                        $index++;
+                    }
+
+                    $pos = $total_users - $user_index;
+
+                    $percentile = $pos /  $total_users * 100;
+
+
 
                     $res['status'] = true;
                     $res['message'] = "Final Result!!";
@@ -776,6 +858,8 @@ class ApiController extends Controller
                     $res['data']['Wrong_Answers'] = $wrong_ans;
                     $res['data']['total_score'] = $score_right_ans - $wrong_ans;
                     $res['data']['Percentage'] = $percentage . "%";
+                    $res['data']['Percentile'] = $percentile . "%";
+                    $res['data']['Total_users_in_test_Appeared'] = $total_users;
                     return response()->json($res);
                 }
             }
@@ -861,12 +945,24 @@ class ApiController extends Controller
         } else {
             $percentage;
         }
-
+        //--------------------------------percntile_find-----------------------------------------------
         $exe = Exercise::find($request->exe_id);
-        $total_users =  Result::where('cat_id', $exe->id)->where('exercise_id',  $request->exe_id)->count();
-        $users_results =  Result::select('user_score')->where('cat_id', $exe->id)->where('exercise_id',  $request->exe_id)->get();
-        $array = collect($users_results)->sortBy('user_score')->reverse()->toArray();
+        $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
+        $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
+        $index = 0;
+        $user_index = 0;
+        foreach ($users_results as $results) {
 
+            if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
+
+                $user_index = $index;
+            }
+            $index++;
+        }
+
+        $pos = $total_users - $user_index;
+
+        $percentile = $pos /  $total_users * 100;
 
         $result = Result::where('user_id', $request->user_id)->where('exercise_id',  $request->exe_id)->get();
         if (count($result) > 0) {
@@ -880,15 +976,15 @@ class ApiController extends Controller
             $res['data']['Wrong_Answers'] = $wrong_ans;
             $res['data']['total_score'] = $score_right_ans - $wrong_ans;
             $res['data']['Percentage'] = $percentage . "%";
-            $res['data']['uiyie'] = $total_users;
-            $res['data']['gdg'] = $array;
+            $res['data']['Percentile'] = $percentile . "%";
+            $res['data']['Total_users_in_test_Appeared'] = $total_users;
+            // $res['data']['Total_users_in_test_list'] = $users_results;
 
             return response()->json($res);
         } else {
 
 
-            $exe = Exercise::find($request->exe_id)->first();
-
+            $exe = Exercise::find($request->exe_id);
             $result = new Result();
             $result->user_id = $request->user_id;
             $result->cat_id = $exe->categoury_id;
@@ -901,6 +997,25 @@ class ApiController extends Controller
             $result->percentage =  $percentage;
             $result->save();
 
+            //--------------------------------percntile_find-----------------------------------------------
+            $exe = Exercise::find($request->exe_id);
+            $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
+            $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
+            $index = 0;
+            $user_index = 0;
+            foreach ($users_results as $results) {
+
+                if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
+
+                    $user_index = $index;
+                }
+                $index++;
+            }
+
+            $pos = $total_users - $user_index;
+
+            $percentile = $pos /  $total_users * 100;
+
 
             $res['status'] = true;
             $res['message'] = "Final Result!!";
@@ -911,6 +1026,8 @@ class ApiController extends Controller
             $res['data']['Wrong_Answers'] = $wrong_ans;
             $res['data']['total_score'] = $score_right_ans - $wrong_ans;
             $res['data']['Percentage'] = $percentage . "%";
+            $res['data']['Percentile'] = $percentile . "%";
+            $res['data']['Total_users_in_test_Appeared'] = $total_users;
             return response()->json($res);
         }
     }
@@ -1148,7 +1265,7 @@ class ApiController extends Controller
                 $users->password =  Hash::make($request->email);
                 $users->save();
 
-                $userss = User::where('user_id',  $request->user_id)->get();
+                $userss = User::where('user_id',  $request->user_id)->first();
 
                 $res['status'] = true;
                 $res['message'] = "user";

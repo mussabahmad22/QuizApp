@@ -68,7 +68,7 @@
                         @foreach($db_query as $que)
                         <tr>
                             <th scope="row">{{ $que->id }}</th>
-                            <td>{{ $que->question_title }}</td>
+                            <td> <?= $que->question_title ?></td>
                             <td>
                                 <?= $que->option_1?>
                             </td>
