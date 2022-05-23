@@ -628,19 +628,33 @@ class ApiController extends Controller
                     $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
                     $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
                     $index = 0;
+                    $c = 0;
                     $user_index = 0;
+                    $score = 0;
                     foreach ($users_results as $results) {
-
+                        if ($c == 0) {
+                            $score = $results->user_score;
+                        } else
+                        if ($results->user_score != $score) {
+                            $index++;
+                            $score = $results->user_score;
+                        }
                         if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
 
                             $user_index = $index;
                         }
-                        $index++;
+
+
+                        $c++;
                     }
 
                     $pos = $total_users - $user_index;
 
-                    $percentile = $pos /  $total_users * 100;
+                    if ($pos == 0) {
+                        $percentile = 1 /  1 * 100;
+                    } else {
+                        $percentile = $pos /  $total_users * 100;
+                    }
 
                     $result = Result::where('user_id', $request->user_id)->where('exercise_id',  $request->exe_id)->get();
                     if (count($result) > 0) {
@@ -679,19 +693,33 @@ class ApiController extends Controller
                         $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
                         $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
                         $index = 0;
+                        $c = 0;
                         $user_index = 0;
+                        $score = 0;
                         foreach ($users_results as $results) {
-
+                            if ($c == 0) {
+                                $score = $results->user_score;
+                            } else
+                            if ($results->user_score != $score) {
+                                $index++;
+                                $score = $results->user_score;
+                            }
                             if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
 
                                 $user_index = $index;
                             }
-                            $index++;
+
+
+                            $c++;
                         }
 
                         $pos = $total_users - $user_index;
 
-                        $percentile = $pos /  $total_users * 100;
+                        if ($pos == 0) {
+                            $percentile = 1 /  1 * 100;
+                        } else {
+                            $percentile = $pos /  $total_users * 100;
+                        }
 
 
                         $res['status'] = true;
@@ -782,19 +810,33 @@ class ApiController extends Controller
                 $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
                 $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
                 $index = 0;
+                $c = 0;
                 $user_index = 0;
+                $score = 0;
                 foreach ($users_results as $results) {
-
+                    if ($c == 0) {
+                        $score = $results->user_score;
+                    } else
+                    if ($results->user_score != $score) {
+                        $index++;
+                        $score = $results->user_score;
+                    }
                     if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
 
                         $user_index = $index;
                     }
-                    $index++;
+
+
+                    $c++;
                 }
 
                 $pos = $total_users - $user_index;
 
-                $percentile = $pos /  $total_users * 100;
+                if ($pos == 0) {
+                    $percentile = 1 /  1 * 100;
+                } else {
+                    $percentile = $pos /  $total_users * 100;
+                }
 
                 $result = Result::where('user_id', $request->user_id)->where('exercise_id',  $request->exe_id)->get();
                 if (count($result) > 0) {
@@ -833,21 +875,33 @@ class ApiController extends Controller
                     $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
                     $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
                     $index = 0;
+                    $c = 0;
                     $user_index = 0;
+                    $score = 0;
                     foreach ($users_results as $results) {
-
+                        if ($c == 0) {
+                            $score = $results->user_score;
+                        } else
+            if ($results->user_score != $score) {
+                            $index++;
+                            $score = $results->user_score;
+                        }
                         if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
 
                             $user_index = $index;
                         }
-                        $index++;
+
+
+                        $c++;
                     }
 
                     $pos = $total_users - $user_index;
 
-                    $percentile = $pos /  $total_users * 100;
-
-
+                    if ($pos == 0) {
+                        $percentile = 1 /  1 * 100;
+                    } else {
+                        $percentile = $pos /  $total_users * 100;
+                    }
 
                     $res['status'] = true;
                     $res['message'] = "Final Result!!";
@@ -945,24 +999,39 @@ class ApiController extends Controller
         } else {
             $percentage;
         }
+
         //--------------------------------percntile_find-----------------------------------------------
         $exe = Exercise::find($request->exe_id);
         $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
         $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
         $index = 0;
+        $c = 0;
         $user_index = 0;
+        $score = 0;
         foreach ($users_results as $results) {
-
+            if ($c == 0) {
+                $score = $results->user_score;
+            } else
+            if ($results->user_score != $score) {
+                $index++;
+                $score = $results->user_score;
+            }
             if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
 
                 $user_index = $index;
             }
-            $index++;
+            $c++;
         }
 
         $pos = $total_users - $user_index;
 
-        $percentile = $pos /  $total_users * 100;
+        if ($pos == 0) {
+            $percentile = 1 /  1 * 100;
+        } else {
+            $percentile = $pos /  $total_users * 100;
+        }
+
+
 
         $result = Result::where('user_id', $request->user_id)->where('exercise_id',  $request->exe_id)->get();
         if (count($result) > 0) {
@@ -978,7 +1047,7 @@ class ApiController extends Controller
             $res['data']['Percentage'] = $percentage . "%";
             $res['data']['Percentile'] = $percentile . "%";
             $res['data']['Total_users_in_test_Appeared'] = $total_users;
-            // $res['data']['Total_users_in_test_list'] = $users_results;
+            //$res['data']['Total_users_in_test_list'] = $users_results;
 
             return response()->json($res);
         } else {
@@ -1002,19 +1071,33 @@ class ApiController extends Controller
             $total_users =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->count();
             $users_results =  Result::where('cat_id', $exe->categoury_id)->where('exercise_id',  $request->exe_id)->orderBy('user_score', 'DESC')->get();
             $index = 0;
+            $c = 0;
             $user_index = 0;
+            $score = 0;
             foreach ($users_results as $results) {
-
+                if ($c == 0) {
+                    $score = $results->user_score;
+                } else
+                if ($results->user_score != $score) {
+                    $index++;
+                    $score = $results->user_score;
+                }
                 if ($results->user_id  ==  $request->user_id && $results->cat_id ==  $exe->categoury_id && $results->exercise_id == $request->exe_id) {
 
                     $user_index = $index;
                 }
-                $index++;
+
+
+                $c++;
             }
 
             $pos = $total_users - $user_index;
 
-            $percentile = $pos /  $total_users * 100;
+            if ($pos == 0) {
+                $percentile = 1 /  1 * 100;
+            } else {
+                $percentile = $pos /  $total_users * 100;
+            }
 
 
             $res['status'] = true;
