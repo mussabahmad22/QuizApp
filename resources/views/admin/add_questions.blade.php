@@ -38,7 +38,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Title Image :</label><br>
-                            <input type="file" name="file_title" value="{{ isset($ques->path_title)?$ques->path_title:'' }}">
+                            <input type="file" name="file_title"
+                                value="{{ isset($ques->path_title)?$ques->path_title:'' }}">
                         </div>
                         <div class="form-group">
                             <label><strong>Option 1*</strong></label>
@@ -157,7 +158,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Review Image :</label><br>
-                            <input type="file" name="file_reveiw" value="{{ isset($ques->path_review)?$ques->path_review:'' }}">
+                            <input type="file" name="file_reveiw"
+                                value="{{ isset($ques->path_review)?$ques->path_review:'' }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Youtube Link*</label>
@@ -187,7 +189,16 @@
         $('.summernote').summernote({
             placeholder: 'Description Here!',
             tabsize: 2,
-            height: 200
+            height: 200,
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ]
         });
     });
 </script>

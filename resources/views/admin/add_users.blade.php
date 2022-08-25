@@ -69,14 +69,18 @@
     </div>
 </div>
 
+
+<a class="flex items-center text-theme-1 mr-3 btn"
+href="{{route('edit_equipment',['id' => $que->id])}}">  <img src="{{asset('img/edit.svg')}}"> Edit </a>
+
+
+<button style="border:none;" type="button" value="{{ $que->id}}"
+    class="deletebtn btn"><a
+        class="flex items-center text-theme-1 mr-3 text-danger "
+        data-toggle="modal" data-target="#myModal" href="">
+        <img src="{{asset('img/del.svg')}}"> Delete </a></button>
+
 <script>
-    $('#submit').click(function () {
-        swal({
-            title: "Good job!",
-            text: "You clicked the button!",
-            icon: "success",
-            button: "Aww yiss!",
-        });
-    });
+
 </script>
 @endsection

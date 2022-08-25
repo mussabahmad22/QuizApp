@@ -149,17 +149,6 @@
 
 </script>
 
-<script type="text/javascript">
-    //============================== Script for Summernote=========================================
-    $(document).ready(function () {
-       
-        $('.summernote').summernote({
-            tabsize: 2,
-            height: 100
-        });
-
-    });
-</script>
 <script>
     $(document).ready(function () {
         $('#questiontbl').DataTable();
